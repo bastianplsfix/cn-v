@@ -1,6 +1,6 @@
 {
   "name": "cn-variants",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "Tiny utilities for working with Tailwind CSS class names. Combines clsx + tailwind-merge with a typed variants helper.",
   "keywords": [
     "classnames",
