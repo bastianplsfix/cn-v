@@ -74,3 +74,10 @@ These commands map to their corresponding tools. For example, `vp dev --port 300
 - [ ] Run `vp install` after pulling remote changes and before getting started.
 - [ ] Run `vp check` and `vp test` to validate changes.
 <!--VITE PLUS END-->
+
+## Releasing
+
+1. Update `version` in `package.json` and add an entry to `CHANGELOG.md`.
+2. Commit, tag (`git tag v<version>`), and push with `git push --tags`.
+3. The `publish` GitHub Actions workflow handles npm publishing automatically on `v*` tags.
+4. Requires an `NPM_TOKEN` secret in the repo's GitHub Actions settings.
