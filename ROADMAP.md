@@ -58,7 +58,9 @@ This may mean `.key` adds API surface without meaningful safety gains for the ty
 **`.option`** (singular) is another candidate. It pairs naturally with the existing `.options` (plural): `.options` gives you the full map, `.option` gives you a single key back.
 
 ```ts
-variant === buttonVariant.option.primary && size === buttonSize.option.lg && "uppercase tracking-wide"
+variant === buttonVariant.option.primary &&
+  size === buttonSize.option.lg &&
+  "uppercase tracking-wide";
 ```
 
 This reads as "the primary option of buttonVariant" and avoids introducing a new concept. `.key` works but is generic. `.option` ties into the vocabulary already established by the API.

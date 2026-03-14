@@ -1,6 +1,6 @@
 {
   "name": "cn-v",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "Tiny utilities for working with Tailwind CSS class names. Combines clsx + tailwind-merge with a typed variants helper.",
   "keywords": [
     "classnames",
@@ -32,7 +32,7 @@
     "dev": "vp pack --watch",
     "test": "vp test",
     "typecheck": "tsc --noEmit",
-    "prepublishOnly": "pnpm run build",
+    "prepublishOnly": "vp pack",
     "prepare": "vp config"
   },
   "dependencies": {
