@@ -1,0 +1,55 @@
+{
+  "name": "cn-v",
+  "version": "0.0.0",
+  "description": "Tiny utilities for working with Tailwind CSS class names. Combines clsx + tailwind-merge with a typed variants helper.",
+  "keywords": [
+    "classnames",
+    "clsx",
+    "tailwind",
+    "tailwind-merge",
+    "variants"
+  ],
+  "homepage": "https://github.com/bastianplsfix/cn-v#readme",
+  "bugs": {
+    "url": "https://github.com/bastianplsfix/cn-v/issues"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bastianplsfix/cn-v.git"
+  },
+  "files": [
+    "dist"
+  ],
+  "type": "module",
+  "types": "./dist/index.d.mts",
+  "exports": {
+    ".": "./dist/index.mjs",
+    "./package.json": "./package.json"
+  },
+  "scripts": {
+    "build": "vp pack",
+    "dev": "vp pack --watch",
+    "test": "vp test",
+    "typecheck": "tsc --noEmit",
+    "prepublishOnly": "pnpm run build",
+    "prepare": "vp config"
+  },
+  "dependencies": {
+    "clsx": "^2.1.1",
+    "tailwind-merge": "^3.5.0"
+  },
+  "devDependencies": {
+    "@types/node": "^25.3.5",
+    "@typescript/native-preview": "7.0.0-dev.20260309.1",
+    "bumpp": "^10.4.1",
+    "typescript": "^5.9.3",
+    "vite-plus": "latest",
+    "vitest": "npm:@voidzero-dev/vite-plus-test@latest"
+  },
+  "overrides": {
+    "vite": "npm:@voidzero-dev/vite-plus-core@latest",
+    "vitest": "npm:@voidzero-dev/vite-plus-test@latest"
+  },
+  "packageManager": "npm@11.11.1"
+}
