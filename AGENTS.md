@@ -79,5 +79,4 @@ These commands map to their corresponding tools. For example, `vp dev --port 300
 
 1. Update `version` in `package.json` and add an entry to `CHANGELOG.md`.
 2. Commit, tag (`git tag v<version>`), and push with `git push --tags`.
-3. The `publish` GitHub Actions workflow handles npm publishing automatically on `v*` tags.
-4. Requires an `NPM_TOKEN` secret in the repo's GitHub Actions settings.
+3. The `publish` GitHub Actions workflow handles npm publishing automatically on `v*` tags via npm trusted publishing (OIDC).
