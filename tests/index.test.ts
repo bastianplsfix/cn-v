@@ -33,6 +33,34 @@ test("cn supports array syntax", () => {
   expect(cn(["foo", "bar"], "baz")).toBe("foo bar baz");
 });
 
+test("cn deduplicates identical tailwind classes", () => {
+  expect(cn("flex", "flex")).toBe("flex");
+});
+
+test("cn resolves tailwind color conflicts", () => {
+  expect(cn("text-red-500", "text-blue-500")).toBe("text-blue-500");
+});
+
+test("cn handles mixed argument types", () => {
+  const isActive = true;
+  expect(cn("base", ["flex", "gap-2"], { "font-bold": isActive }, undefined)).toBe(
+    "base flex gap-2 font-bold",
+  );
+});
+
+// integration
+
+test("variants output composes with cn", () => {
+  const color = variants({
+    primary: "bg-blue-500 text-white",
+    danger: "bg-red-500 text-white",
+  });
+  const size = variants({ sm: "px-2 py-1", lg: "px-6 py-3" });
+  expect(cn("rounded", color("primary"), size("lg"), "px-8")).toBe(
+    "rounded bg-blue-500 text-white py-3 px-8",
+  );
+});
+
 // variants
 
 test("variants returns matching class string", () => {

@@ -59,7 +59,7 @@ cn(
   buttonVariant(variant),
   buttonSize(size),
   variant === "primary" && size === "lg" && "uppercase tracking-wide",
-)
+);
 ```
 
 This is plain JavaScript. No new API to learn. For one or two compound cases it's clear and direct. If a component accumulates many compound conditions, that's a signal to reconsider the variant design or reach for a more opinionated tool.
