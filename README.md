@@ -1,5 +1,8 @@
 # cn-variants
 
+[![npm version](https://img.shields.io/npm/v/cn-variants.svg)](https://www.npmjs.com/package/cn-variants)
+[![CI](https://github.com/bastianplsfix/cn-variants/actions/workflows/ci.yml/badge.svg)](https://github.com/bastianplsfix/cn-variants/actions/workflows/ci.yml)
+
 Tiny utilities for working with Tailwind CSS class names. Combines [clsx](https://github.com/lukeed/clsx) + [tailwind-merge](https://github.com/dcastil/tailwind-merge) with a typed `variants` helper.
 
 ## Install

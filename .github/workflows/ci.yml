@@ -10,9 +10,9 @@ jobs:
   check:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
         with:
           node-version: 22
 
@@ -21,3 +21,14 @@ jobs:
       - run: npx vp check
 
       - run: npx vp test --run
+
+      - run: npx vp pack
+
+      - name: Lint package for publishing
+        run: npx vp exec publint
+
+      - name: Check bundle size budget
+        run: |
+          size=$(gzip -c dist/index.mjs | wc -c | tr -d ' ')
+          echo "dist/index.mjs gzipped: ${size} bytes (budget: 1024)"
+          test "$size" -le 1024
