@@ -191,7 +191,7 @@ cn-variants intentionally keeps compound styles as plain JavaScript expressions 
 cn(
   base(),
   intent(kind),
-  size(size),
+  sizeVariant(size),
   loading && "opacity-50",
   iconOnly && "aspect-square",
   kind === "primary" && size === "lg" && "uppercase",

@@ -50,7 +50,7 @@ The helper is type-only and adds no runtime code. It also keeps examples focused
 
 ## Why `.options` exists
 
-`.options` is a frozen copy of the original map. It remains useful as a runtime reference to the available values and as an alternate type extraction surface for users who prefer built-in TypeScript syntax:
+`.options` is the original map, frozen in place — `variants` freezes the map you pass in rather than copying it. It remains useful as a runtime reference to the available values and as an alternate type extraction surface for users who prefer built-in TypeScript syntax:
 
 ```ts
 type ButtonVariant = keyof typeof buttonVariant.options;
