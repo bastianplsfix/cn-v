@@ -38,7 +38,7 @@ cn("base", ["flex", "gap-2"], { "font-bold": isActive }, undefined, null, false)
 
 ## `variants(map)`
 
-Creates a typed lookup function for Tailwind class variants. Returns `""` for unknown keys at runtime, relying on TypeScript for compile-time safety.
+Creates a typed lookup function for Tailwind class variants. The map is captured with const generics, so object keys stay as string literals for autocomplete and compile-time safety. Returns `""` for unknown keys at runtime, relying on TypeScript for compile-time safety.
 
 ```ts
 import { cn, variants } from "cn-variants";
@@ -56,19 +56,40 @@ const buttonSize = variants({
 });
 ```
 
-The returned function exposes a frozen `.options` object with the original map, useful for deriving union types:
+The returned function accepts only the keys from the map:
 
 ```ts
-type ButtonVariant = keyof typeof buttonVariant.options;
-// → "primary" | "secondary" | "danger"
+buttonVariant("primary");
+// ✅ ok
 
-type ButtonSize = keyof typeof buttonSize.options;
-// → "sm" | "md" | "lg"
+buttonVariant("ghost");
+// ❌ TypeScript error: expected "primary" | "secondary" | "danger"
 ```
+
+### Inferring variant types
+
+Use the `Variant` helper type when you need the union for component props:
+
+```ts
+import { type Variant, variants } from "cn-variants";
+
+const buttonVariant = variants({
+  primary: "bg-indigo-600 text-white border-none",
+  secondary: "bg-transparent text-indigo-600 border border-indigo-600",
+  danger: "bg-red-600 text-white border-none",
+});
+
+type ButtonVariant = Variant<typeof buttonVariant>;
+// → "primary" | "secondary" | "danger"
+```
+
+The returned function also exposes a frozen `.options` object with the original map, so `keyof typeof buttonVariant.options` still works if you prefer that style.
 
 ### Using variants with `cn` in components
 
 ```tsx
+type ButtonSize = Variant<typeof buttonSize>;
+
 interface ButtonProps {
   variant?: ButtonVariant;
   size?: ButtonSize;
@@ -160,6 +181,39 @@ Install the [Tailwind CSS](https://plugins.jetbrains.com/plugin/15321-tailwind-c
 module.exports = {
   classFunctions: ["cn", "variants"],
 };
+```
+
+## Philosophy: no mini DSL
+
+cn-variants intentionally keeps compound styles as plain JavaScript expressions instead of adding a `compoundVariants` configuration API. If you can write it as a JavaScript expression, cn-variants should not invent an API for it.
+
+```tsx
+cn(
+  base(),
+  intent(kind),
+  sizeVariant(size),
+  loading && "opacity-50",
+  iconOnly && "aspect-square",
+  kind === "primary" && size === "lg" && "uppercase",
+);
+```
+
+That keeps matching rules, precedence, and debugging in userland where TypeScript and your editor already understand them.
+
+## Bring your own `cn`
+
+`variants` returns plain strings, so it composes with any class-merging function, not just the bundled `cn`. If your app re-renders heavily and class merging shows up in profiles, you can pair `variants` with a faster merger like [cnfast](https://github.com/aidenybai/cnfast) without changing anything else:
+
+```ts
+import { cn } from "cnfast";
+import { variants } from "cn-variants";
+
+const buttonVariant = variants({
+  primary: "bg-indigo-600 text-white",
+  secondary: "bg-transparent text-indigo-600",
+});
+
+cn("rounded-md font-medium", buttonVariant("primary"));
 ```
 
 ## Tree-shaking
