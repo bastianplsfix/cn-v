@@ -200,6 +200,22 @@ cn(
 
 That keeps matching rules, precedence, and debugging in userland where TypeScript and your editor already understand them.
 
+## Bring your own `cn`
+
+`variants` returns plain strings, so it composes with any class-merging function, not just the bundled `cn`. If your app re-renders heavily and class merging shows up in profiles, you can pair `variants` with a faster merger like [cnfast](https://github.com/aidenybai/cnfast) without changing anything else:
+
+```ts
+import { cn } from "cnfast";
+import { variants } from "cn-variants";
+
+const buttonVariant = variants({
+  primary: "bg-indigo-600 text-white",
+  secondary: "bg-transparent text-indigo-600",
+});
+
+cn("rounded-md font-medium", buttonVariant("primary"));
+```
+
 ## Tree-shaking
 
 `cn` and `variants` are independent. If you only import `variants`, your bundler will tree-shake away `cn` and its dependencies (clsx, tailwind-merge), keeping your bundle minimal.
