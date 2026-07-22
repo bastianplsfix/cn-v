@@ -1,6 +1,6 @@
 {
   "name": "cn-variants",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "Tiny utilities for working with Tailwind CSS class names. Combines clsx + tailwind-merge with a typed variants helper.",
   "keywords": [
     "classnames",
@@ -35,6 +35,7 @@
     "build": "vp pack",
     "dev": "vp pack --watch",
     "test": "vp test run",
+    "test:package": "node scripts/package-smoke.mjs",
     "typecheck": "vp exec tsc --noEmit",
     "check:package": "vp exec publint && vp exec attw --pack . --profile esm-only",
     "prepublishOnly": "vp pack"
@@ -46,7 +47,6 @@
   "devDependencies": {
     "@arethetypeswrong/cli": "0.18.5",
     "@types/node": "^24.13.3",
-    "@typescript/native-preview": "7.0.0-dev.20260707.2",
     "publint": "0.3.21",
     "typescript": "^5.9.3",
     "vite-plus": "0.2.5"

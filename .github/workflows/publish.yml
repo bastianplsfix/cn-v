@@ -11,9 +11,9 @@ jobs:
       contents: read
       id-token: write
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
 
-      - uses: voidzero-dev/setup-vp@v1
+      - uses: voidzero-dev/setup-vp@250f29ce396baf5e8f24498e17c0dfdebabc26eb # v1.15.0
         with:
           node-version: 24
           cache: true
@@ -30,5 +30,7 @@ jobs:
       - run: vp pack
 
       - run: vp run check:package
+
+      - run: vp run test:package
 
       - run: vp pm publish --provenance --access public
