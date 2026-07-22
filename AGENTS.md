@@ -1,3 +1,47 @@
+# cn-variants project guidance
+
+## Purpose and public contract
+
+cn-variants is a tiny, ESM-only TypeScript library with two runtime exports: `cn` and `variants`. Preserve these invariants:
+
+- `cn` combines all `clsx` input shapes and resolves Tailwind conflicts with `tailwind-merge`; later conflicting classes win.
+- Each `variants()` call represents one variant axis and accepts a direct string-to-string map.
+- Keep the `const` generic on `variants()` so keys remain literal types without `as const`.
+- Invalid variant keys are TypeScript errors. If types are bypassed, unknown and inherited runtime keys return `""`.
+- `.options` is a frozen snapshot; never freeze, mutate, or retain the caller's map.
+- Defaults and compound variants belong in userland JavaScript, not a new configuration DSL.
+- Keep `cn` and `variants` in separate modules so unused functionality and dependencies remain tree-shakeable.
+- Preserve the ESM-only export map and `"sideEffects": false` unless a major release explicitly changes that contract.
+
+## Repository map
+
+- `src/cn.ts`: `cn` implementation.
+- `src/variants.ts`: variant types and runtime implementation.
+- `src/index.ts`: public exports only.
+- `tests/index.test.ts`: runtime behavior and colocated type assertions.
+- `tests/types.ts`: compile-time rejection and inference checks.
+- `examples/basic.ts`: canonical consumer usage, compiled against the packed package by the smoke test.
+- `scripts/package-smoke.mjs`: validates the published tarball, ESM boundary, and consumer TypeScript usage.
+- `DESIGN.md`: rationale behind the deliberately small API.
+
+## Change requirements
+
+- Read `DESIGN.md` before expanding the public API.
+- Add or update runtime and type tests for observable behavior changes.
+- Keep README examples, public TSDoc, and the canonical example aligned with the implementation.
+- Use package-root imports in consumer documentation; do not document internal `src` or `dist` paths.
+- Treat changes to exports, module format, accepted inputs, return values, or Tailwind conflict behavior as semver-sensitive.
+
+## Validation
+
+After `vp install`, run:
+
+1. `vp check`
+2. `vp test run`
+3. `vp pack`
+4. `vp run check:package`
+5. `vp run test:package`
+
 <!--VITE PLUS START-->
 
 # Using Vite+, the Unified Toolchain for the Web

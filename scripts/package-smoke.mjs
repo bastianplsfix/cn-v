@@ -1,5 +1,5 @@
 import { execFileSync } from "node:child_process";
-import { mkdtempSync, readdirSync, rmSync, writeFileSync } from "node:fs";
+import { mkdtempSync, readFileSync, readdirSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 
@@ -81,6 +81,11 @@ size.options.sm = "text-base";
 `,
   );
 
+  writeFileSync(
+    join(smokeRoot, "basic.ts"),
+    readFileSync(join(projectRoot, "examples/basic.ts"), "utf8"),
+  );
+
   run("vp", ["install", "--ignore-scripts"]);
   run("node", ["smoke.mjs"]);
   run("vp", [
@@ -95,6 +100,7 @@ size.options.sm = "text-base";
     "--moduleResolution",
     "nodenext",
     "smoke.ts",
+    "basic.ts",
   ]);
 } finally {
   rmSync(smokeRoot, { recursive: true, force: true });

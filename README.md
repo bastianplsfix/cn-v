@@ -13,6 +13,44 @@ npm install cn-variants
 
 cn-variants is ESM-only. Use `import` or dynamic `import()`; CommonJS `require()` is not supported.
 
+## API at a glance
+
+```ts
+import { cn, type Variant, variants } from "cn-variants";
+
+const buttonTone = variants({
+  primary: "bg-indigo-600 text-white",
+  danger: "bg-red-600 text-white",
+});
+
+const buttonSize = variants({
+  sm: "px-3 py-1 text-xs",
+  md: "px-4 py-2 text-sm",
+});
+
+type ButtonTone = Variant<typeof buttonTone>;
+type ButtonSize = Variant<typeof buttonSize>;
+
+interface ButtonClassOptions {
+  tone?: ButtonTone;
+  size?: ButtonSize;
+  className?: string;
+}
+
+function buttonClasses({ tone = "primary", size = "md", className }: ButtonClassOptions = {}) {
+  return cn("rounded-md font-medium", buttonTone(tone), buttonSize(size), className);
+}
+```
+
+The API deliberately differs from CVA-style configuration objects:
+
+- Pass a direct key-to-class map to `variants({ primary: "..." })`.
+- Use one `variants()` call for each axis, such as tone or size.
+- Call the result with one key, such as `buttonTone("primary")`; it does not accept an options object.
+- Put defaults and compound conditions in the component that composes the class strings.
+- Put a caller-provided `className` last in `cn()` when it should win Tailwind conflicts.
+- Import through the ESM package entry point; internal modules are not public exports.
+
 ## `cn(...inputs)`
 
 Merges class names using clsx and tailwind-merge. Handles conditionals, duplicates, and Tailwind conflicts.
