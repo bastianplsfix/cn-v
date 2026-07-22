@@ -9,23 +9,31 @@ on:
 jobs:
   check:
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        node-version: [20, 22, 24]
+    permissions:
+      contents: read
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
 
-      - uses: actions/setup-node@v5
+      - uses: voidzero-dev/setup-vp@250f29ce396baf5e8f24498e17c0dfdebabc26eb # v1.15.0
         with:
-          node-version: 22
+          node-version: ${{ matrix.node-version }}
+          cache: true
 
-      - run: npm install
+      - run: vp install --frozen-lockfile --ignore-scripts
 
-      - run: npx vp check
+      - run: vp check
 
-      - run: npx vp test --run
+      - run: vp test run
 
-      - run: npx vp pack
+      - run: vp pack
 
-      - name: Lint package for publishing
-        run: npx vp exec publint
+      - run: vp run check:package
+
+      - run: vp run test:package
 
       - name: Check bundle size budget
         run: |

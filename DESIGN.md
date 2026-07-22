@@ -50,7 +50,7 @@ The helper is type-only and adds no runtime code. It also keeps examples focused
 
 ## Why `.options` exists
 
-`.options` is the original map, frozen in place — `variants` freezes the map you pass in rather than copying it. It remains useful as a runtime reference to the available values and as an alternate type extraction surface for users who prefer built-in TypeScript syntax:
+`.options` is a frozen snapshot of the original map. It remains useful as a runtime reference to the available values and as an alternate type extraction surface for users who prefer built-in TypeScript syntax, without freezing or retaining the caller's object:
 
 ```ts
 type ButtonVariant = keyof typeof buttonVariant.options;
@@ -92,4 +92,4 @@ The Tailwind CSS language server supports two ways to detect class strings in cu
 - `classRegex` (experimental): fragile regex patterns like `["variants\\(([^)]*)\\)", "\"([^\"]*)\""]` that parse source code with regular expressions. Breaks on nested parentheses, formatting changes, or comments.
 - `classFunctions` (stable): just a list of function names: `["cn", "variants"]`. The language server handles the rest.
 
-We use `classFunctions`. It's simpler to configure, not experimental, and works across VS Code, Zed, and IntelliJ.
+We use `classFunctions`. It's simpler to configure, not experimental, and works across VS Code, Zed, and IntelliJ through their Tailwind language-server settings. It is an editor setting, not a property in `tailwind.config.js`.

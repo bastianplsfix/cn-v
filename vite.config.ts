@@ -5,10 +5,7 @@ export default defineConfig({
     "*": "vp check --fix",
   },
   pack: {
-    dts: {
-      tsgo: true,
-    },
-    exports: true,
+    dts: true,
   },
   lint: { options: { typeAware: true, typeCheck: true } },
 });

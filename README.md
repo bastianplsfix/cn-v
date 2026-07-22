@@ -11,6 +11,8 @@ Tiny utilities for working with Tailwind CSS class names. Combines [clsx](https:
 npm install cn-variants
 ```
 
+cn-variants is ESM-only. Use `import` or dynamic `import()`; CommonJS `require()` is not supported.
+
 ## `cn(...inputs)`
 
 Merges class names using clsx and tailwind-merge. Handles conditionals, duplicates, and Tailwind conflicts.
@@ -86,7 +88,7 @@ type ButtonVariant = Variant<typeof buttonVariant>;
 // → "primary" | "secondary" | "danger"
 ```
 
-The returned function also exposes a frozen `.options` object with the original map, so `keyof typeof buttonVariant.options` still works if you prefer that style.
+The returned function also exposes a frozen `.options` snapshot, so `keyof typeof buttonVariant.options` still works if you prefer that style. Creating a variant does not freeze or retain the object passed by the caller.
 
 ### Using variants with `cn` in components
 
@@ -178,13 +180,15 @@ Add to your project's `.zed/settings.json`:
 
 ### IntelliJ IDEA / WebStorm
 
-Install the [Tailwind CSS](https://plugins.jetbrains.com/plugin/15321-tailwind-css) plugin, then add to your `tailwind.config.js`:
+Install the [Tailwind CSS](https://plugins.jetbrains.com/plugin/15321-tailwind-css) plugin, then open **Settings | Languages & Frameworks | Style Sheets | Tailwind CSS**. Add the following language-server option in the **Configuration** area:
 
-```js
-module.exports = {
-  classFunctions: ["cn", "variants"],
-};
+```json
+{
+  "classFunctions": ["cn", "variants"]
+}
 ```
+
+`classFunctions` configures the editor's language server; it is not a `tailwind.config.js` property.
 
 ## Philosophy: no mini DSL
 
@@ -222,6 +226,8 @@ cn("rounded-md font-medium", buttonVariant("primary"));
 ## Tree-shaking
 
 `cn` and `variants` are independent. If you only import `variants`, your bundler will tree-shake away `cn` and its dependencies (clsx, tailwind-merge), keeping your bundle minimal.
+
+The package declares `"sideEffects": false` so bundlers can apply this optimization safely.
 
 ## Versioning policy
 

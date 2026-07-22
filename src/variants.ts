@@ -3,7 +3,7 @@ export type VariantOptions = Record<string, string>;
 export interface VariantFn<TOptions extends VariantOptions> {
   /** Returns the class string for a variant key. */
   (key: keyof TOptions): string;
-  /** The original variant map, frozen for safe runtime inspection and type extraction. */
+  /** A frozen snapshot of the variant map for safe runtime inspection and type extraction. */
   readonly options: Readonly<TOptions>;
 }
 
@@ -13,7 +13,12 @@ export type Variant<T extends VariantFn<VariantOptions>> =
 export function variants<const TOptions extends VariantOptions>(
   map: TOptions,
 ): VariantFn<TOptions> {
-  return Object.assign((key: keyof TOptions): string => map[key] ?? "", {
-    options: Object.freeze(map),
-  });
+  const options = Object.freeze({ ...map });
+  return Object.assign(
+    (key: keyof TOptions): string =>
+      Object.prototype.hasOwnProperty.call(options, key) ? options[key] : "",
+    {
+      options,
+    },
+  );
 }

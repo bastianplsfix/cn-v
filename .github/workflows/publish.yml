@@ -11,23 +11,29 @@ jobs:
       contents: write
       id-token: write
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
 
-      - uses: actions/setup-node@v5
+      - uses: voidzero-dev/setup-vp@250f29ce396baf5e8f24498e17c0dfdebabc26eb # v1.15.0
         with:
-          node-version: 22
-          registry-url: https://registry.npmjs.org
+          node-version: 24
+          cache: true
 
-      # Trusted publishing (OIDC) requires npm >= 11.5.1; Node 22 ships npm 10
-      - run: npm install -g npm@latest
+      - run: vp install --frozen-lockfile --ignore-scripts
 
-      - run: npm install
+      - name: Verify tag matches package version
+        run: test "$GITHUB_REF_NAME" = "v$(node -p 'require("./package.json").version')"
 
-      - run: npx vp test --run
+      - run: vp check
 
-      - run: npx vp pack
+      - run: vp test run
 
-      - run: npm publish --provenance --access public
+      - run: vp pack
+
+      - run: vp run check:package
+
+      - run: vp run test:package
+
+      - run: vp pm publish --provenance --access public
 
       - name: Create GitHub Release
         env:
