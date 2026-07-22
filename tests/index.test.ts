@@ -1,6 +1,6 @@
-import { expect, test } from "vite-plus/test";
+import { expect, expectTypeOf, test } from "vite-plus/test";
 import { cn } from "../src/cn.ts";
-import { variants } from "../src/variants.ts";
+import { type Variant, type VariantFn, variants } from "../src/variants.ts";
 
 // cn
 
@@ -92,5 +92,24 @@ test("variants exposes frozen options", () => {
   expect(Object.isFrozen(source)).toBe(false);
 
   source.sm = "text-base";
+  expect(size("sm")).toBe("text-sm");
+});
+
+// types
+
+test("Variant derives the key union from a variant function", () => {
+  const size = variants({ sm: "text-sm", lg: "text-lg" });
+  expectTypeOf<Variant<typeof size>>().toEqualTypeOf<"sm" | "lg">();
+  expectTypeOf<keyof typeof size.options>().toEqualTypeOf<"sm" | "lg">();
+});
+
+test("variants preserves literal keys in the call signature", () => {
+  const size = variants({ sm: "text-sm", lg: "text-lg" });
+  expectTypeOf(size).parameter(0).toEqualTypeOf<"sm" | "lg">();
+  expectTypeOf(size("sm")).toEqualTypeOf<string>();
+});
+
+test("variants return type is assignable to VariantFn", () => {
+  const size: VariantFn<{ sm: string; lg: string }> = variants({ sm: "text-sm", lg: "text-lg" });
   expect(size("sm")).toBe("text-sm");
 });

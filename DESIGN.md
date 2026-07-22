@@ -38,17 +38,38 @@ This is where defaults live in every React component. Moving them into the varia
 
 TypeScript catches invalid keys at compile time. The only way to hit the runtime path with a bad key is to bypass types (casting, untyped JS, dynamic data). In that case, throwing crashes the render for a styling concern, which is disproportionate. CVA and clsx both silently ignore invalid inputs. We follow the same pattern: return `""`, `cn` filters it out, the component renders without that variant's classes. Visually wrong is better than broken.
 
+## Why `Variant<typeof fn>` exists
+
+Type extraction should be obvious enough that users almost never write conditional types or reach into function parameters themselves:
+
+```ts
+type ButtonVariant = Variant<typeof buttonVariant>;
+```
+
+The helper is type-only and adds no runtime code. It also keeps examples focused on component props instead of teaching `keyof typeof` patterns.
+
 ## Why `.options` exists
 
-Type extraction. You need a way to derive the union type from the variant definition:
+`.options` is a frozen snapshot of the original map. It remains useful as a runtime reference to the available values and as an alternate type extraction surface for users who prefer built-in TypeScript syntax, without freezing or retaining the caller's object:
 
 ```ts
 type ButtonVariant = keyof typeof buttonVariant.options;
 ```
 
-Without `.options`, you'd need a helper type like `VariantKey<typeof buttonVariant>` (less familiar) or `Parameters<typeof buttonVariant>[0]` (less readable). `.options` is a frozen snapshot of the original map. It serves double duty as both the type extraction surface and a runtime reference to the available values without freezing or retaining the caller's object.
-
 It was originally called `.map`, but that collides mentally with `Array.map()` and the `Map` constructor. `.options` reads naturally: "the options of buttonVariant."
+
+## Why `variants` uses const generics
+
+Variant keys should stay literal without requiring users to add `as const` or write explicit types. The function uses a const generic so this:
+
+```ts
+const color = variants({
+  primary: "...",
+  secondary: "...",
+});
+```
+
+infers the call signature as accepting `"primary" | "secondary"`, not `string`. That preserves autocomplete at the call site and produces clearer TypeScript errors for invalid values.
 
 ## Why compound variants are just conditionals
 

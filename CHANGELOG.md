@@ -21,6 +21,18 @@
 - Make CI and publishing reproducible through the Vite+ workflow
 - Pin GitHub Actions and automate dependency updates
 
+## 1.1.0
+
+### Features
+
+- `Variant<typeof fn>` helper type for deriving the variant key union, plus exported `VariantFn` and `VariantOptions` types
+- `variants(map)` now uses a `const` generic, preserving literal keys for autocomplete and clearer type errors without `as const`
+
+### Documentation
+
+- Documented the no-mini-DSL philosophy (compound variants stay plain JavaScript conditionals)
+- Documented pairing `variants` with alternative `cn` implementations such as cnfast
+
 ## 1.0.0
 
 Initial stable release.

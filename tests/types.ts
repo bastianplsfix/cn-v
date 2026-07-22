@@ -10,7 +10,7 @@ const size = variants({ sm: "text-sm", lg: "text-lg" });
 
 export type VariantKeyIsInferred = Expect<Equal<Parameters<typeof size>[0], "sm" | "lg">>;
 export type OptionsAreReadonly = Expect<
-  Equal<typeof size.options, Readonly<{ sm: string; lg: string }>>
+  Equal<typeof size.options, { readonly sm: "text-sm"; readonly lg: "text-lg" }>
 >;
 export type ClassValueIsExported = Expect<Equal<Extract<ClassValue, string>, string>>;
 
