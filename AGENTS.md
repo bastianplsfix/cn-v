@@ -22,6 +22,7 @@ cn-variants is a tiny, ESM-only TypeScript library with two runtime exports: `cn
 - `tests/types.ts`: compile-time rejection and inference checks.
 - `examples/basic.ts`: canonical consumer usage, compiled against the packed package by the smoke test.
 - `scripts/package-smoke.mjs`: validates the published tarball, ESM boundary, and consumer TypeScript usage.
+- `docs/`: independent Astro 7 documentation site; it requires Node.js 22.12 or newer and has its own lockfile.
 - `DESIGN.md`: rationale behind the deliberately small API.
 
 ## Change requirements
@@ -41,6 +42,12 @@ After `vp install`, run:
 3. `vp pack`
 4. `vp run check:package`
 5. `vp run test:package`
+
+For documentation changes, also run from `docs/`:
+
+1. `vp install --frozen-lockfile --ignore-scripts`
+2. `vp run check`
+3. `vp run build`
 
 <!--VITE PLUS START-->
 

@@ -1,0 +1,91 @@
+---
+import CodeBlock from "../components/CodeBlock.astro";
+import Layout from "../components/Layout.astro";
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, "");
+const docsHref = `${base}/docs/`;
+
+const example = `import { cn, type Variant, variants } from "cn-variants";
+
+const tone = variants({
+  primary: "bg-indigo-600 text-white",
+  danger: "bg-red-600 text-white",
+});
+
+type Tone = Variant<typeof tone>;
+
+cn("rounded px-4", tone("primary"), className);`;
+---
+
+<Layout>
+  <section class="hero">
+    <p class="eyebrow">Tailwind class utilities</p>
+    <h1>Small primitives. Typed variants.</h1>
+    <p class="hero-summary">
+      Combine class names, resolve Tailwind conflicts, and model variants without learning another
+      configuration language.
+    </p>
+    <div class="actions">
+      <a class="button primary" href={docsHref}>Read the docs</a>
+      <a class="button" href="https://www.npmjs.com/package/cn-variants">View on npm</a>
+    </div>
+  </section>
+
+  <section class="home-section">
+    <div class="section-grid">
+      <h2 class="section-heading">The whole idea</h2>
+      <div class="section-content">
+        <p class="hero-summary">
+          Two functions. Plain strings in, plain strings out. TypeScript handles the guardrails and
+          JavaScript handles the composition.
+        </p>
+        <CodeBlock code={example} label="button.ts" />
+      </div>
+    </div>
+  </section>
+
+  <section class="home-section">
+    <div class="section-grid">
+      <h2 class="section-heading">Two primitives</h2>
+      <div class="section-content">
+        <ul class="primitive-list">
+          <li>
+            <h3>cn(...inputs)</h3>
+            <p>All clsx input forms, with Tailwind conflicts resolved from left to right.</p>
+          </li>
+          <li>
+            <h3>variants(map)</h3>
+            <p>A typed lookup for one variant axis, with literal-key autocomplete.</p>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="home-section">
+    <div class="section-grid">
+      <h2 class="section-heading">Deliberately less</h2>
+      <div class="section-content">
+        <div class="fact-row">
+          <div class="fact">
+            <strong>ESM only</strong>
+            <span>One modern package boundary</span>
+          </div>
+          <div class="fact">
+            <strong>Zero DSL</strong>
+            <span>Conditions stay JavaScript</span>
+          </div>
+          <div class="fact">
+            <strong>Tree-shakeable</strong>
+            <span>Import only what you use</span>
+          </div>
+        </div>
+        <p>
+          Defaults live in your component. Compound variants are ordinary conditions. The library
+          does not take ownership of decisions TypeScript and JavaScript already express clearly.
+        </p>
+        <p><a href={`${base}/design/`}>Read the design decisions →</a></p>
+      </div>
+    </div>
+  </section>
+</Layout>
