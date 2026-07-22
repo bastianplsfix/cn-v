@@ -1,0 +1,195 @@
+---
+import CodeBlock from "../../components/CodeBlock.astro";
+import Layout from "../../components/Layout.astro";
+
+const install = `npm install cn-variants`;
+
+const cnExample = `import { cn } from "cn-variants";
+
+cn("px-4 py-2", "px-6");
+// "py-2 px-6"
+
+cn("flex", ["gap-2", "items-center"], {
+  "font-bold": isActive,
+});`;
+
+const variantsExample = `import { type Variant, variants } from "cn-variants";
+
+const buttonTone = variants({
+  primary: "bg-indigo-600 text-white",
+  secondary: "border border-indigo-600 text-indigo-600",
+  danger: "bg-red-600 text-white",
+});
+
+type ButtonTone = Variant<typeof buttonTone>;
+// "primary" | "secondary" | "danger"
+
+buttonTone("primary");
+buttonTone("ghost"); // TypeScript error`;
+
+const componentExample = `interface ButtonProps {
+  tone?: Variant<typeof buttonTone>;
+  size?: Variant<typeof buttonSize>;
+  className?: string;
+}
+
+function buttonClasses({
+  tone = "primary",
+  size = "md",
+  className,
+}: ButtonProps = {}) {
+  return cn(
+    "rounded-md font-medium",
+    buttonTone(tone),
+    buttonSize(size),
+    tone === "danger" && size === "lg" && "uppercase",
+    className,
+  );
+}`;
+
+const wrapperExample = `import { type ClassValue, cn } from "cn-variants";
+
+export function card(...classes: ClassValue[]) {
+  return cn("rounded-lg border bg-white shadow-sm", ...classes);
+}`;
+
+const editorConfig = `{
+  "tailwindCSS.classFunctions": ["cn", "variants"]
+}`;
+---
+
+<Layout title="Documentation" description="Install and use cn-variants with TypeScript and Tailwind CSS.">
+  <header class="page-header">
+    <p class="eyebrow">Documentation</p>
+    <h1>The complete API.</h1>
+    <p class="page-summary">
+      One merger, one typed lookup, and ordinary JavaScript for everything between them.
+    </p>
+  </header>
+
+  <div class="docs-shell">
+    <aside class="toc" aria-label="On this page">
+      <p>On this page</p>
+      <ol>
+        <li><a href="#install">Install</a></li>
+        <li><a href="#cn">cn</a></li>
+        <li><a href="#variants">variants</a></li>
+        <li><a href="#components">Components</a></li>
+        <li><a href="#runtime">Runtime behavior</a></li>
+        <li><a href="#types">Types</a></li>
+        <li><a href="#intellisense">IntelliSense</a></li>
+      </ol>
+    </aside>
+
+    <article class="prose">
+      <section id="install">
+        <h2>Install</h2>
+        <CodeBlock code={install} label="Terminal" />
+        <p>
+          cn-variants is ESM-only. Use named <code>import</code> statements or dynamic{" "}
+          <code>import()</code>. CommonJS <code>require()</code> is not supported.
+        </p>
+      </section>
+
+      <section id="cn">
+        <h2><code>cn(...inputs)</code></h2>
+        <p>
+          <code>cn</code> first combines any value accepted by clsx, then resolves conflicting
+          Tailwind utilities with tailwind-merge. Later conflicting utilities win.
+        </p>
+        <CodeBlock code={cnExample} label="classes.ts" />
+        <p>
+          This makes the last position meaningful. Put a caller-provided <code>className</code> last
+          when consumers should be able to override component defaults.
+        </p>
+      </section>
+
+      <section id="variants">
+        <h2><code>variants(map)</code></h2>
+        <p>
+          <code>variants</code> creates a lookup function for one variant axis. The map goes directly
+          into the function—there is no nested configuration object.
+        </p>
+        <CodeBlock code={variantsExample} label="variants.ts" />
+        <div class="note">
+          <strong>API shape:</strong> call <code>buttonTone("primary")</code>, not{" "}
+          <code>buttonTone({`{ tone: "primary" }`})</code>. Use a separate function for each axis.
+        </div>
+
+        <h3>Extracting the key union</h3>
+        <p>
+          <code>Variant&lt;typeof buttonTone&gt;</code> is the preferred way to derive component prop
+          types. <code>keyof typeof buttonTone.options</code> is also supported.
+        </p>
+      </section>
+
+      <section id="components">
+        <h2>Composing components</h2>
+        <p>
+          Defaults stay with component props. Compound styles stay as boolean expressions inside{" "}
+          <code>cn</code>. That keeps control flow visible to TypeScript and your editor.
+        </p>
+        <CodeBlock code={componentExample} label="button.ts" />
+      </section>
+
+      <section id="runtime">
+        <h2>Runtime behavior</h2>
+        <ul>
+          <li>Known keys return their class string unchanged.</li>
+          <li>Unknown or inherited keys return an empty string when static types are bypassed.</li>
+          <li>The source map is copied when <code>variants()</code> is called.</li>
+          <li><code>.options</code> exposes a frozen snapshot without freezing the caller's object.</li>
+        </ul>
+        <p>
+          Invalid keys are styling errors rather than render failures, so the runtime fallback is
+          intentionally non-throwing. Validate dynamic external data before treating it as a typed
+          variant key.
+        </p>
+      </section>
+
+      <section id="types">
+        <h2>Exported types</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Type</th>
+              <th>Purpose</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>Variant&lt;T&gt;</code></td>
+              <td>Extract the allowed key union from a variant function.</td>
+            </tr>
+            <tr>
+              <td><code>VariantFn&lt;T&gt;</code></td>
+              <td>Describe the returned lookup function and its frozen options.</td>
+            </tr>
+            <tr>
+              <td><code>VariantOptions</code></td>
+              <td>Describe a string-to-string variant map.</td>
+            </tr>
+            <tr>
+              <td><code>ClassValue</code></td>
+              <td>Type wrapper inputs accepted by <code>cn</code>.</td>
+            </tr>
+          </tbody>
+        </table>
+        <CodeBlock code={wrapperExample} label="card.ts" />
+      </section>
+
+      <section id="intellisense">
+        <h2>Tailwind IntelliSense</h2>
+        <p>
+          Register both function names with the Tailwind CSS language server to enable class
+          completion inside calls and variant maps.
+        </p>
+        <CodeBlock code={editorConfig} label=".vscode/settings.json" />
+        <p>
+          The same <code>classFunctions</code> setting can be passed through Zed and JetBrains
+          Tailwind language-server configuration.
+        </p>
+      </section>
+    </article>
+  </div>
+</Layout>
