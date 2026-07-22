@@ -34,6 +34,13 @@
   "scripts": {
     "build": "vp pack",
     "dev": "vp pack --watch",
+    "docs-install": "cd docs && vp install --frozen-lockfile --ignore-scripts",
+    "docs": "cd docs && vp exec astro dev",
+    "docs-stop": "cd docs && vp exec astro dev stop",
+    "docs-status": "cd docs && vp exec astro dev status",
+    "docs-check": "cd docs && vp exec astro check",
+    "docs-build": "cd docs && vp exec astro build",
+    "docs-preview": "cd docs && vp exec astro preview",
     "test": "vp test run",
     "test:package": "node scripts/package-smoke.mjs",
     "typecheck": "vp exec tsc --noEmit",

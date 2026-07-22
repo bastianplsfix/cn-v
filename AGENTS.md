@@ -43,11 +43,14 @@ After `vp install`, run:
 4. `vp run check:package`
 5. `vp run test:package`
 
-For documentation changes, also run from `docs/`:
+For documentation changes, use the root task aliases:
 
-1. `vp install --frozen-lockfile --ignore-scripts`
-2. `vp run check`
-3. `vp run build`
+1. `vp run docs-install`
+2. `vp run docs-check`
+3. `vp run docs-build`
+
+Start the documentation development server from the repository root with `vp run docs`. Check it
+with `vp run docs-status` and stop it with `vp run docs-stop`.
 
 <!--VITE PLUS START-->
 
