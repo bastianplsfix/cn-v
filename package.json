@@ -46,9 +46,9 @@
   },
   "devDependencies": {
     "@arethetypeswrong/cli": "0.18.5",
-    "@types/node": "^24.13.3",
+    "@types/node": "^26.1.1",
     "publint": "0.3.21",
-    "typescript": "^5.9.3",
+    "typescript": "^7.0.2",
     "vite-plus": "0.2.5"
   },
   "packageManager": "npm@11.11.1"
