@@ -5,6 +5,9 @@
     "moduleDetection": "force",
     "module": "preserve",
     "moduleResolution": "bundler",
+    "paths": {
+      "cn-variants": ["./src/index.ts"]
+    },
     "resolveJsonModule": true,
     "types": ["node"],
     "strict": true,
@@ -17,5 +20,5 @@
     "verbatimModuleSyntax": true,
     "skipLibCheck": true
   },
-  "include": ["src", "tests"]
+  "include": ["src", "tests", "examples"]
 }
