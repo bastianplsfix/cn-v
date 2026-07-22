@@ -75,8 +75,22 @@ test("variants returns empty string for unknown key", () => {
   expect(size("xl")).toBe("");
 });
 
+test("variants ignores inherited object properties", () => {
+  const size = variants({ sm: "text-sm" });
+  const lookup = size as (key: string) => string;
+  expect(lookup("toString")).toBe("");
+  expect(lookup("constructor")).toBe("");
+  expect(lookup("__proto__")).toBe("");
+});
+
 test("variants exposes frozen options", () => {
-  const size = variants({ sm: "text-sm", lg: "text-lg" });
+  const source = { sm: "text-sm", lg: "text-lg" };
+  const size = variants(source);
   expect(size.options).toEqual({ sm: "text-sm", lg: "text-lg" });
   expect(Object.isFrozen(size.options)).toBe(true);
+  expect(size.options).not.toBe(source);
+  expect(Object.isFrozen(source)).toBe(false);
+
+  source.sm = "text-base";
+  expect(size("sm")).toBe("text-sm");
 });

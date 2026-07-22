@@ -8,7 +8,6 @@ export default defineConfig({
     dts: {
       tsgo: true,
     },
-    exports: true,
   },
   lint: { options: { typeAware: true, typeCheck: true } },
 });

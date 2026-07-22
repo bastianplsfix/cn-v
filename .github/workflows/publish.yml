@@ -13,15 +13,22 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - uses: actions/setup-node@v4
+      - uses: voidzero-dev/setup-vp@v1
         with:
-          node-version: 22
-          registry-url: https://registry.npmjs.org
+          node-version: 24
+          cache: true
 
-      - run: npm install
+      - run: vp install --frozen-lockfile --ignore-scripts
 
-      - run: npx vp test --run
+      - name: Verify tag matches package version
+        run: test "$GITHUB_REF_NAME" = "v$(node -p 'require("./package.json").version')"
 
-      - run: npx vp pack
+      - run: vp check
 
-      - run: npm publish --provenance --access public
+      - run: vp test run
+
+      - run: vp pack
+
+      - run: vp run check:package
+
+      - run: vp pm publish --provenance --access public

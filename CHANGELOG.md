@@ -1,5 +1,19 @@
 # Changelog
 
+## Unreleased
+
+### Fixed
+
+- Return an empty string for inherited object property names passed as unknown variant keys
+- Expose a frozen snapshot through `.options` without freezing or retaining the caller's object
+
+### Changed
+
+- Declare the package as explicitly ESM-only and side-effect free
+- Add type-level and package compatibility checks
+- Upgrade and pin the Vite+ toolchain
+- Make CI and publishing reproducible through the Vite+ workflow
+
 ## 1.0.0
 
 Initial stable release.

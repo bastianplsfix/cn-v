@@ -46,7 +46,7 @@ Type extraction. You need a way to derive the union type from the variant defini
 type ButtonVariant = keyof typeof buttonVariant.options;
 ```
 
-Without `.options`, you'd need a helper type like `VariantKey<typeof buttonVariant>` (less familiar) or `Parameters<typeof buttonVariant>[0]` (less readable). `.options` is a frozen copy of the original map. It serves double duty as both the type extraction surface and a runtime reference to the available values.
+Without `.options`, you'd need a helper type like `VariantKey<typeof buttonVariant>` (less familiar) or `Parameters<typeof buttonVariant>[0]` (less readable). `.options` is a frozen snapshot of the original map. It serves double duty as both the type extraction surface and a runtime reference to the available values without freezing or retaining the caller's object.
 
 It was originally called `.map`, but that collides mentally with `Array.map()` and the `Map` constructor. `.options` reads naturally: "the options of buttonVariant."
 
@@ -71,4 +71,4 @@ The Tailwind CSS language server supports two ways to detect class strings in cu
 - `classRegex` (experimental): fragile regex patterns like `["variants\\(([^)]*)\\)", "\"([^\"]*)\""]` that parse source code with regular expressions. Breaks on nested parentheses, formatting changes, or comments.
 - `classFunctions` (stable): just a list of function names: `["cn", "variants"]`. The language server handles the rest.
 
-We use `classFunctions`. It's simpler to configure, not experimental, and works across VS Code, Zed, and IntelliJ.
+We use `classFunctions`. It's simpler to configure, not experimental, and works across VS Code, Zed, and IntelliJ through their Tailwind language-server settings. It is an editor setting, not a property in `tailwind.config.js`.
