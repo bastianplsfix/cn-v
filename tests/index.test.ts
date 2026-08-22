@@ -1,4 +1,5 @@
 import { expect, expectTypeOf, test } from "vite-plus/test";
+import type { ClassValue } from "clsx";
 import { cn } from "../src/cn.ts";
 import { createCn } from "../src/create-cn.ts";
 import { type Variant, type VariantFn, variants } from "../src/variants.ts";
@@ -23,6 +24,14 @@ test("createCn uses the provided merger", () => {
 test("createCn returns empty string for no arguments", () => {
   const customCn = createCn((classes) => classes);
   expect(customCn()).toBe("");
+});
+
+test("createCn accepts full ClassValue inputs", () => {
+  const customCn = createCn((classes) => classes);
+  const input: ClassValue[] = ["px-2", ["flex", false], { bold: true }, undefined];
+  expectTypeOf(customCn).parameter(0).toEqualTypeOf<ClassValue>();
+  expect(customCn(...input)).toBe("px-2 flex bold");
+  expectTypeOf(customCn("a")).toEqualTypeOf<string>();
 });
 
 test("createCn works with a real extendTailwindMerge merger", async () => {
@@ -132,9 +141,19 @@ test("variants returns empty string for undefined key", () => {
 test("variants ignores inherited object properties", () => {
   const size = variants({ sm: "text-sm" });
   const lookup = size as (key: string) => string;
-  expect(lookup("toString")).toBe("");
-  expect(lookup("constructor")).toBe("");
-  expect(lookup("__proto__")).toBe("");
+  for (const key of [
+    "toString",
+    "constructor",
+    "__proto__",
+    "valueOf",
+    "hasOwnProperty",
+    "propertyIsEnumerable",
+    "toLocaleString",
+    "isPrototypeOf",
+    "__defineGetter__",
+  ]) {
+    expect(lookup(key)).toBe("");
+  }
 });
 
 test("variants exposes frozen options", () => {

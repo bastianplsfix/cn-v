@@ -1,12 +1,14 @@
 {
   "name": "cn-variants",
-  "version": "2.0.0",
+  "version": "3.0.0",
   "description": "Tiny utilities for working with Tailwind CSS class names. Combines clsx + tailwind-merge with a typed variants helper.",
   "keywords": [
     "classnames",
     "clsx",
+    "cva",
     "tailwind",
     "tailwind-merge",
+    "variant",
     "variants"
   ],
   "homepage": "https://bastianplsfix.github.io/cn-variants/",
@@ -57,8 +59,11 @@
     "vite-plus": "0.2.5"
   },
   "peerDependencies": {
-    "clsx": "^2.0.0",
-    "tailwind-merge": "^3.0.0"
+    "clsx": "^2.1.1",
+    "tailwind-merge": "^3.5.0"
+  },
+  "engines": {
+    "node": ">=20"
   },
   "packageManager": "npm@11.11.1"
 }

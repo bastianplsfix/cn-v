@@ -88,6 +88,30 @@ size.options.sm = "text-base";
 
   run("vp", ["install", "--ignore-scripts"]);
   run("node", ["smoke.mjs"]);
+
+  // Peer dependencies must be installed automatically (npm 7+).
+  for (const peer of ["clsx", "tailwind-merge"]) {
+    if (!readdirSync(join(smokeRoot, "node_modules")).includes(peer)) {
+      throw new Error(`Peer dependency ${peer} was not installed automatically`);
+    }
+  }
+
+  // A variants-only consumer exercises the array-value and undefined-key
+  // paths against the packed package. Note this runs with peers installed:
+  // tree-shaking away cn's dependencies requires a bundler, which raw Node
+  // is not, and the single entry point statically imports clsx.
+  writeFileSync(
+    join(smokeRoot, "smoke-variants-only.mjs"),
+    `
+import assert from "node:assert/strict";
+import { variants } from "cn-variants";
+
+const size = variants({ sm: ["px-2", "text-sm"] });
+assert.equal(size("sm"), "px-2 text-sm");
+assert.equal(size(undefined), "");
+`,
+  );
+  run("node", ["smoke-variants-only.mjs"]);
   run("vp", [
     "exec",
     "tsc",
