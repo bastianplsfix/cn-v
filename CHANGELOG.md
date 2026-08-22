@@ -23,12 +23,15 @@ If you already depend on them (most Tailwind projects do), verify your versions 
 - `createCn(mergeClasses)` builds a `cn`-style function around a custom tailwind-merge implementation, for projects with custom Tailwind utilities; it lives in its own module and tree-shakes away unless imported
 - `VariantsOf<T>` helper type extracts the lookup interface from a value created by `variants()`
 - `VariantValue` type (`string | readonly string[]`) is exported
+- `MergeClasses` type alias for the merger shape accepted by `createCn`
 
 ### Documentation
 
 - Documented empty-string keys and the read-only (non-frozen) array values inside `.options`
 - Documented React Server Components compatibility
 - Documented the peer dependency model in the versioning policy
+- Fixed the custom Tailwind configuration example in the README to use `createCn`
+- Documented why `VariantsOf` exists alongside `VariantFn` in DESIGN.md
 - Synced the documentation site and LLM reference files with the new API surface
 
 ## 2.0.0

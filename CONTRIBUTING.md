@@ -29,6 +29,7 @@ vp check            # format + lint + typecheck
 vp test run         # runtime and type tests
 vp pack             # build dist/
 vp run check:package  # publint + arethetypeswrong
+vp run check:size     # gzipped bundle size budget
 vp run test:package   # packed-tarball smoke test (ESM, peers, TS consumer)
 ```
 

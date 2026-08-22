@@ -35,11 +35,5 @@ jobs:
 
       - run: vp run test:package
 
-      # The budget covers the full entry point: the single ESM export bundles
-      # cn, createCn, and variants together, even though consumers who import
-      # only one of them tree-shake the rest in their own bundlers.
       - name: Check bundle size budget
-        run: |
-          size=$(gzip -c dist/index.mjs | wc -c | tr -d ' ')
-          echo "dist/index.mjs gzipped: ${size} bytes (budget: 1536)"
-          test "$size" -le 1536
+        run: vp run check:size

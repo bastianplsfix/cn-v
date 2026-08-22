@@ -47,6 +47,7 @@
     "test:package": "node scripts/package-smoke.mjs",
     "typecheck": "vp exec tsc --noEmit",
     "check:package": "vp exec publint && vp exec attw --pack . --profile esm-only",
+    "check:size": "node scripts/check-size.mjs",
     "prepublishOnly": "vp pack"
   },
   "devDependencies": {

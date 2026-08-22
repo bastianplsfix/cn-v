@@ -4,6 +4,9 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 
 const projectRoot = process.cwd();
+const rootPackageJson = JSON.parse(readFileSync(join(projectRoot, "package.json"), "utf8"));
+const typescriptVersion = rootPackageJson.devDependencies.typescript.replace(/^[\^~>=< ]+/, "");
+
 const smokeRoot = mkdtempSync(join(tmpdir(), "cn-variants-smoke-"));
 
 function run(command, args) {
@@ -31,7 +34,7 @@ try {
           "cn-variants": `file:${tarball}`,
         },
         devDependencies: {
-          typescript: "5.9.3",
+          typescript: typescriptVersion,
         },
       },
       null,

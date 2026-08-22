@@ -60,6 +60,16 @@ type ButtonVariant = Variant<typeof buttonVariant>;
 
 The helper is type-only and adds no runtime code. It also keeps examples focused on component props instead of teaching `keyof typeof` patterns.
 
+## Why `VariantsOf<T>` exists alongside `VariantFn`
+
+`VariantFn<TOptions>` is exported and can be written directly when the options type is known up front (`VariantFn<{ sm: string }>`). `VariantsOf<T>` covers the other direction: extracting the lookup interface from an existing variants function without restating its options, so wrapper functions stay in sync automatically:
+
+```ts
+function applyStyle(lookup: VariantsOf<typeof buttonVariant>) {}
+```
+
+It distributes over its input, so unions of variant functions map to unions of lookups. Both are type-only; keeping them separate avoids making `VariantFn` do double duty as both a constructor annotation and an inference helper.
+
 ## Why `.options` exists
 
 `.options` is a frozen snapshot of the original map. It remains useful as a runtime reference to the available values and as an alternate type extraction surface for users who prefer built-in TypeScript syntax, without freezing or retaining the caller's object:

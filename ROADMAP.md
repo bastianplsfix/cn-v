@@ -2,6 +2,10 @@
 
 Planned work and past decisions. Anything not listed under Planned is out of scope until revisited.
 
+## Planned
+
+Nothing currently planned. The API is intentionally small and stable; see Resolved below for past decisions and DESIGN.md for the reasoning behind the current shape.
+
 ## Resolved
 
 Items below have been decided. Kept here for historical context.

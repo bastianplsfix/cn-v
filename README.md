@@ -284,41 +284,35 @@ cn("rounded-md font-medium", buttonVariant("primary"));
 
 ## Custom Tailwind configurations
 
-`cn` uses tailwind-merge with its default configuration. If your project uses a custom Tailwind theme — for example shadcn/ui tokens like `bg-primary` or custom spacing scales — you may want conflict resolution that understands those utilities. See [`createCn`](#custom-tailwind-configurations) below for the built-in escape hatch.
-
-```ts
-import { extendTailwindMerge } from "tailwind-merge";
-
-const cn = extendTailwindMerge({
-  extend: {
-    classGroups: {
-      "font-size": [{ text: ["primary", "secondary"] }],
-    },
-  },
-});
-
-cn("text-primary", "text-secondary");
-// → "text-secondary" (custom tokens are merged correctly)
-```
-
-`variants` returns plain strings, so it composes with any merge function unchanged. For a drop-in replacement that also handles clsx input types, use `createCn`:
+`cn` uses tailwind-merge with its default configuration. If your project uses a custom Tailwind theme — for example shadcn/ui tokens like `bg-primary` or custom spacing scales — you may want conflict resolution that understands those utilities. `createCn` is the built-in escape hatch for this.
 
 ```ts
 import { createCn } from "cn-variants";
 import { extendTailwindMerge } from "tailwind-merge";
 
-const twMerge = extendTailwindMerge({
-  extend: {
-    classGroups: {
-      "bg-color": [{ bg: ["primary", "secondary"] }],
+const cn = createCn(
+  extendTailwindMerge({
+    extend: {
+      classGroups: {
+        "font-size": [{ text: ["primary", "secondary"] }],
+      },
     },
-  },
-});
+  }),
+);
 
-export const cn = createCn(twMerge);
+cn("text-primary", "text-secondary");
+// → "text-secondary" (custom tokens are merged correctly)
 ```
 
-`createCn` lives in its own module, so it (and its dependencies) tree-shake away for anyone who only imports `cn` or `variants`.
+`variants` returns plain strings, so it composes with any merge function unchanged. Wrapping the merger in `createCn` also gives you full clsx input support (`cn("base", { bold: true })`), just like the built-in `cn`.
+
+`createCn` lives in its own module, so it (and its dependencies) tree-shake away for anyone who only imports `cn` or `variants`. The `MergeClasses` type (`(classes: string) => string`) is exported too, so you can annotate mergers and wrapper functions directly:
+
+```ts
+import { type MergeClasses } from "cn-variants";
+
+const merge: MergeClasses = (classes) => myCustomMerger(classes);
+```
 
 ## React Server Components
 

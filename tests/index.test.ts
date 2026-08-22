@@ -1,10 +1,15 @@
 import { expect, expectTypeOf, test } from "vite-plus/test";
 import type { ClassValue } from "clsx";
 import { cn } from "../src/cn.ts";
-import { createCn } from "../src/create-cn.ts";
+import { createCn, type MergeClasses } from "../src/create-cn.ts";
 import { type Variant, type VariantFn, variants } from "../src/variants.ts";
 
 // createCn
+
+test("MergeClasses describes a merger function", () => {
+  const merger: MergeClasses = (classes) => classes;
+  expect(createCn(merger)("foo", "bar")).toBe("foo bar");
+});
 
 test("createCn combines class names like cn", () => {
   const customCn = createCn((classes) => classes);
@@ -55,6 +60,18 @@ test("options snapshot preserves array values untouched", () => {
 });
 
 // cn
+
+test("variants options snapshot has a null prototype", () => {
+  const size = variants({ sm: "text-sm" });
+  expect(Object.getPrototypeOf(size.options)).toBeNull();
+});
+
+test("options snapshot shares array references with the source", () => {
+  const source = { sm: ["px-2"] as string[] };
+  const size = variants(source);
+  source.sm.push("text-sm");
+  expect(size.options.sm).toEqual(["px-2", "text-sm"]);
+});
 
 test("cn merges class names", () => {
   expect(cn("foo", "bar")).toBe("foo bar");
@@ -125,6 +142,15 @@ test("variants returns empty string for unknown key", () => {
   const size = variants({ sm: "text-sm" });
   // @ts-expect-error testing unknown key at runtime
   expect(size("xl")).toBe("");
+});
+
+test("variants returns empty string for numeric and symbol keys", () => {
+  const size = variants({ sm: "text-sm" });
+  // @ts-expect-error testing invalid key at runtime
+  expect(size(0)).toBe("");
+  const symbol = Symbol("sm");
+  const lookup = size as (key: string | number | symbol) => string;
+  expect(lookup(symbol)).toBe("");
 });
 
 test("variants joins array values with spaces", () => {

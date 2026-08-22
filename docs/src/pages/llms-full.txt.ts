@@ -89,6 +89,7 @@ function buttonClasses({ tone = "primary", size = "md", className }: ButtonProps
 - VariantOptions: Record<string, VariantValue>.
 - VariantValue: string | readonly string[].
 - ClassValue: re-exported from clsx for wrapper functions.
+- MergeClasses: (classes: string) => string, the merger shape createCn accepts.
 
 ## Non-features
 
