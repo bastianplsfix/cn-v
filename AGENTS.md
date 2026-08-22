@@ -2,13 +2,15 @@
 
 ## Purpose and public contract
 
-cn-variants is a tiny, ESM-only TypeScript library with two runtime exports: `cn` and `variants`. Preserve these invariants:
+cn-variants is a tiny, ESM-only TypeScript library with three runtime exports: `cn`, `createCn`, and `variants`. Preserve these invariants:
 
 - `cn` combines all `clsx` input shapes and resolves Tailwind conflicts with `tailwind-merge`; later conflicting classes win.
-- Each `variants()` call represents one variant axis and accepts a direct string-to-string map.
+- `createCn(mergeClasses)` builds a `cn`-style function around a custom tailwind-merge implementation; it lives in its own module.
+- Each `variants()` call represents one variant axis and accepts a direct string-or-string-array map; arrays are joined with spaces.
+- `clsx` and `tailwind-merge` are peer dependencies (clsx `^2.1.1`, tailwind-merge `^3.5.0`).
 - Keep the `const` generic on `variants()` so keys remain literal types without `as const`.
-- Invalid variant keys are TypeScript errors. If types are bypassed, unknown and inherited runtime keys return `""`.
-- `.options` is a frozen snapshot; never freeze, mutate, or retain the caller's map.
+- Invalid variant keys are TypeScript errors. If types are bypassed, unknown, inherited, or undefined runtime keys return `""`.
+- `.options` is a frozen shallow snapshot of a null-prototype object; never freeze, mutate, or retain the caller's map, and treat array values as read-only.
 - Defaults and compound variants belong in userland JavaScript, not a new configuration DSL.
 - Keep `cn` and `variants` in separate modules so unused functionality and dependencies remain tree-shakeable.
 - Preserve the ESM-only export map and `"sideEffects": false` unless a major release explicitly changes that contract.
@@ -16,14 +18,17 @@ cn-variants is a tiny, ESM-only TypeScript library with two runtime exports: `cn
 ## Repository map
 
 - `src/cn.ts`: `cn` implementation.
+- `src/create-cn.ts`: `createCn` factory; own module for tree-shaking.
 - `src/variants.ts`: variant types and runtime implementation.
 - `src/index.ts`: public exports only.
 - `tests/index.test.ts`: runtime behavior and colocated type assertions.
 - `tests/types.ts`: compile-time rejection and inference checks.
 - `examples/basic.ts`: canonical consumer usage, compiled against the packed package by the smoke test.
-- `scripts/package-smoke.mjs`: validates the published tarball, ESM boundary, and consumer TypeScript usage.
+- `scripts/package-smoke.mjs`: validates the published tarball, ESM boundary, peer installation, and consumer TypeScript usage.
 - `docs/`: independent Astro 7 documentation site; it requires Node.js 22.12 or newer and has its own lockfile.
 - `DESIGN.md`: rationale behind the deliberately small API.
+- `ROADMAP.md`: planned work and past decisions; consult before proposing API changes.
+- `CONTRIBUTING.md`: human-facing contribution guide and validation steps.
 
 ## Change requirements
 
