@@ -47,16 +47,18 @@
     "check:package": "vp exec publint && vp exec attw --pack . --profile esm-only",
     "prepublishOnly": "vp pack"
   },
-  "dependencies": {
-    "clsx": "^2.1.1",
-    "tailwind-merge": "^3.5.0"
-  },
   "devDependencies": {
     "@arethetypeswrong/cli": "0.18.5",
     "@types/node": "^24.13.3",
+    "clsx": "^2.1.1",
     "publint": "0.3.21",
+    "tailwind-merge": "^3.5.0",
     "typescript": "^5.9.3",
     "vite-plus": "0.2.5"
+  },
+  "peerDependencies": {
+    "clsx": "^2.0.0",
+    "tailwind-merge": "^3.0.0"
   },
   "packageManager": "npm@11.11.1"
 }

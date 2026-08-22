@@ -14,6 +14,6 @@ import { twMerge } from "tailwind-merge";
  * // "rounded font-bold px-4" when condition is true
  * ```
  */
-export function cn(...inputs: ClassValue[]) {
+export function cn(...inputs: ClassValue[]): string {
   return twMerge(clsx(inputs));
 }

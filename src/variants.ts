@@ -1,15 +1,19 @@
-/** Maps the allowed keys for one variant axis to their class strings. */
-export type VariantOptions = Record<string, string>;
+/** A class string, or a list of class strings joined with spaces. */
+export type VariantValue = string | readonly string[];
+
+/** Maps the allowed keys for one variant axis to their classes. */
+export type VariantOptions = Record<string, VariantValue>;
 
 /** A typed class lookup created by {@link variants}. */
 export interface VariantFn<TOptions extends VariantOptions> {
   /**
    * Returns the class string for a variant key.
    *
-   * Invalid keys are rejected by TypeScript. Untyped runtime calls with an
-   * unknown or inherited key return an empty string.
+   * Invalid keys are rejected by TypeScript. `undefined` is accepted so
+   * optional props can be passed through directly. Untyped runtime calls
+   * with an unknown or inherited key return an empty string.
    */
-  (key: keyof TOptions): string;
+  (key: keyof TOptions | undefined): string;
   /** A frozen snapshot of the variant map for safe runtime inspection and type extraction. */
   readonly options: Readonly<TOptions>;
 }
@@ -19,17 +23,40 @@ export type Variant<T extends VariantFn<VariantOptions>> =
   T extends VariantFn<infer TOptions> ? keyof TOptions : never;
 
 /**
+ * Extracts the typed lookup interface from a value created by
+ * {@link variants}, for annotating wrapper functions and parameters.
+ *
+ * @example
+ * ```ts
+ * const size = variants({ sm: "text-sm" });
+ *
+ * function applyStyle(lookup: VariantsOf<typeof size>) {
+ *   return cn("font-medium", lookup(undefined));
+ * }
+ * ```
+ */
+export type VariantsOf<T> = T extends VariantFn<infer TOptions> ? VariantFn<TOptions> : never;
+
+function toClassString(value: string | readonly string[]): string {
+  return typeof value === "string" ? value : value.join(" ");
+}
+
+/**
  * Creates a typed class lookup for one variant axis.
  *
- * Pass the key-to-class map directly. Defaults and compound variants stay in
- * the consuming component and can be composed with {@link cn}. The input map
- * is copied; the returned function exposes that frozen snapshot as `.options`.
+ * Pass the key-to-class map directly. Values can be a class string or an
+ * array of class strings, which are joined with spaces. Defaults and
+ * compound variants stay in the consuming component and can be composed
+ * with {@link cn}. The input map is copied; the returned function exposes
+ * that frozen snapshot as `.options`. Only the snapshot itself is frozen:
+ * array values inside it are not frozen, so callers should treat them as
+ * read-only. Empty-string keys are allowed and behave like any other key.
  *
  * @example
  * ```ts
  * const tone = variants({
  *   primary: "bg-indigo-600 text-white",
- *   danger: "bg-red-600 text-white",
+ *   danger: ["bg-red-600", "text-white"],
  * });
  *
  * tone("primary");
@@ -39,10 +66,12 @@ export type Variant<T extends VariantFn<VariantOptions>> =
 export function variants<const TOptions extends VariantOptions>(
   map: TOptions,
 ): VariantFn<TOptions> {
-  const options = Object.freeze({ ...map });
+  const options = Object.freeze(Object.assign(Object.create(null), map));
   return Object.assign(
-    (key: keyof TOptions): string =>
-      Object.prototype.hasOwnProperty.call(options, key) ? options[key] : "",
+    (key: keyof TOptions | undefined): string =>
+      key !== undefined && Object.prototype.hasOwnProperty.call(options, key)
+        ? toClassString(options[key])
+        : "",
     {
       options,
     },

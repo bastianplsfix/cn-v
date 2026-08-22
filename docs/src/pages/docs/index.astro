@@ -21,6 +21,11 @@ const buttonTone = variants({
   danger: "bg-red-600 text-white",
 });
 
+const buttonSize = variants({
+  sm: "px-3 py-1 text-xs",
+  md: ["px-4", "py-2", "text-sm"],
+});
+
 type ButtonTone = Variant<typeof buttonTone>;
 // "primary" | "secondary" | "danger"
 
@@ -53,6 +58,19 @@ export function card(...classes: ClassValue[]) {
   return cn("rounded-lg border bg-white shadow-sm", ...classes);
 }`;
 
+const createCnExample = `import { createCn } from "cn-variants";
+import { extendTailwindMerge } from "tailwind-merge";
+
+const twMerge = extendTailwindMerge({
+  extend: {
+    classGroups: {
+      "bg-color": [{ bg: ["primary", "secondary"] }],
+    },
+  },
+});
+
+export const cn = createCn(twMerge);`;
+
 const editorConfig = `{
   "tailwindCSS.classFunctions": ["cn", "variants"]
 }`;
@@ -73,6 +91,7 @@ const editorConfig = `{
       <ol>
         <li><a href="#install">Install</a></li>
         <li><a href="#cn">cn</a></li>
+        <li><a href="#createcn">createCn</a></li>
         <li><a href="#variants">variants</a></li>
         <li><a href="#components">Components</a></li>
         <li><a href="#runtime">Runtime behavior</a></li>
@@ -104,11 +123,23 @@ const editorConfig = `{
         </p>
       </section>
 
+      <section id="createcn">
+        <h2><code>createCn(mergeClasses)</code></h2>
+        <p>
+          Projects with custom Tailwind utilities—design tokens like <code>bg-primary</code> or
+          plugin classes—can wire a configured tailwind-merge into a <code>cn</code>-style function.
+          The default <code>cn</code> stays zero-config, and <code>createCn</code> lives in its own
+          module so it tree-shakes away unless imported.
+        </p>
+        <CodeBlock code={createCnExample} label="cn.ts" />
+      </section>
+
       <section id="variants">
         <h2><code>variants(map)</code></h2>
         <p>
           <code>variants</code> creates a lookup function for one variant axis. The map goes directly
-          into the function—there is no nested configuration object.
+          into the function—there is no nested configuration object. Values can be a class string or
+          an array of class strings, joined with spaces.
         </p>
         <CodeBlock code={variantsExample} label="variants.ts" />
         <div class="note">
@@ -135,10 +166,10 @@ const editorConfig = `{
       <section id="runtime">
         <h2>Runtime behavior</h2>
         <ul>
-          <li>Known keys return their class string unchanged.</li>
+          <li>Known keys return their class string unchanged; array values are joined with spaces.</li>
           <li>Unknown or inherited keys return an empty string when static types are bypassed.</li>
-          <li>The source map is copied when <code>variants()</code> is called.</li>
-          <li><code>.options</code> exposes a frozen snapshot without freezing the caller's object.</li>
+          <li><code>undefined</code> is accepted for optional props and returns an empty string.</li>
+          <li>The source map is copied when <code>variants()</code> is called; only the snapshot map itself is frozen.</li>
         </ul>
         <p>
           Invalid keys are styling errors rather than render failures, so the runtime fallback is
@@ -167,7 +198,15 @@ const editorConfig = `{
             </tr>
             <tr>
               <td><code>VariantOptions</code></td>
-              <td>Describe a string-to-string variant map.</td>
+              <td>Describe a variant map keyed by class name.</td>
+            </tr>
+            <tr>
+              <td><code>VariantValue</code></td>
+              <td>A class string or a readonly array of class strings.</td>
+            </tr>
+            <tr>
+              <td><code>VariantsOf&lt;T&gt;</code></td>
+              <td>Extract the lookup interface from a value created by <code>variants()</code>.</td>
             </tr>
             <tr>
               <td><code>ClassValue</code></td>

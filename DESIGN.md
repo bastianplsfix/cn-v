@@ -32,7 +32,19 @@ The function requires a key. Defaults belong at the component level:
 function Button({ variant = "primary" }: ButtonProps) {
 ```
 
-This is where defaults live in every React component. Moving them into the variant definition would duplicate that responsibility and create a second place to check.
+This is where defaults live in every React component. Moving them into the variant definition would duplicate that responsibility and create a second place to check. A `{ default: "md" }` option was considered and rejected: it redefines what an `undefined` lookup means and splits defaulting between the map and the component.
+
+## Why variant values can be arrays
+
+Class strings for one variant often grow long (`"px-6 py-3 text-base"`). Accepting `string | readonly string[]` lets authors keep classes as list items, which compose better with JavaScript (spread, filter, conditional entries) than string concatenation. Arrays are joined with spaces at lookup time, so the function still returns a plain string that slots into any merger. The `.options` snapshot is a shallow copy: array values are shared references, not frozen — treat them as read-only.
+
+## Why `undefined` is an accepted key
+
+Optional props (`tone?: ButtonTone`) are the norm, so `buttonTone(tone)` should compile without `?? undefined` gymnastics at every call site. It returns `""`, matching unknown keys.
+
+## Why `createCn` is a separate factory
+
+Projects with custom Tailwind utilities (design tokens like `bg-primary`, plugin classes) need a configured tailwind-merge; the default `cn` must stay zero-config. Rather than making `cn` configurable — which taxes everyone for one edge case — `createCn(mergeClasses)` builds a clsx-wired merge function from any tailwind-merge implementation. It lives in its own module so it tree-shakes away entirely for consumers who never import it.
 
 ## Why invalid keys return `""` instead of throwing
 

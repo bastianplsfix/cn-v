@@ -2,7 +2,7 @@ const body = `# cn-variants
 
 > Tiny, typed utilities for composing Tailwind CSS class names. cn-variants combines clsx and tailwind-merge with a typed lookup for variant classes.
 
-cn-variants is ESM-only. Its runtime API has two named exports: cn and variants. It deliberately does not provide defaults, compound-variant configuration, slots, or a component styling DSL.
+cn-variants is ESM-only. Its runtime API has three named exports: cn, createCn, and variants. It deliberately does not provide defaults, compound-variant configuration, slots, or a component styling DSL.
 
 ## Documentation
 

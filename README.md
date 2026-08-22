@@ -83,7 +83,7 @@ cn("base", ["flex", "gap-2"], { "font-bold": isActive }, undefined, null, false)
 
 ## `variants(map)`
 
-Creates a typed lookup function for Tailwind class variants. The map is captured with const generics, so object keys stay as string literals for autocomplete and compile-time safety. Returns `""` for unknown keys at runtime, relying on TypeScript for compile-time safety.
+Creates a typed lookup function for Tailwind class variants. The map is captured with const generics, so object keys stay as string literals for autocomplete and compile-time safety. Values can be a class string or an array of class strings, which are joined with spaces. Returns `""` for unknown keys at runtime, relying on TypeScript for compile-time safety. `undefined` is also accepted and returns `""`, so optional props can be passed straight through:
 
 ```ts
 import { cn, variants } from "cn-variants";
@@ -96,7 +96,7 @@ const buttonVariant = variants({
 
 const buttonSize = variants({
   sm: "px-3 py-1 text-xs",
-  md: "px-4 py-2 text-sm",
+  md: ["px-4", "py-2", "text-sm"],
   lg: "px-6 py-3 text-base",
 });
 ```
@@ -109,6 +109,9 @@ buttonVariant("primary");
 
 buttonVariant("ghost");
 // ❌ TypeScript error: expected "primary" | "secondary" | "danger"
+
+buttonVariant(undefined);
+// ✅ ok — returns ""
 ```
 
 ### Inferring variant types
@@ -128,7 +131,23 @@ type ButtonVariant = Variant<typeof buttonVariant>;
 // → "primary" | "secondary" | "danger"
 ```
 
-The returned function also exposes a frozen `.options` snapshot, so `keyof typeof buttonVariant.options` still works if you prefer that style. Creating a variant does not freeze or retain the object passed by the caller.
+The returned function also exposes a frozen `.options` snapshot, so `keyof typeof buttonVariant.options` still works if you prefer that style. Creating a variant does not freeze or retain the object passed by the caller. Only the snapshot map itself is frozen; array values inside it are not frozen, so treat them as read-only.
+
+Empty-string keys are allowed and behave like any other key — they are looked up with the same rules, so `variants({ "": "hidden" })("")` returns `"hidden"`.
+
+### Annotating wrappers with `VariantsOf`
+
+Use the `VariantsOf` helper type when a function parameter should accept any lookup created by `variants()`:
+
+```ts
+import { type VariantsOf } from "cn-variants";
+
+function applyStyle(lookup: VariantsOf<typeof buttonSize>, size?: ButtonSize) {
+  return cn("font-medium", lookup(size));
+}
+```
+
+The `VariantValue` type (`string | readonly string[]`) is exported too, in case you type variant maps directly.
 
 ### Using variants with `cn` in components
 
@@ -263,6 +282,48 @@ const buttonVariant = variants({
 cn("rounded-md font-medium", buttonVariant("primary"));
 ```
 
+## Custom Tailwind configurations
+
+`cn` uses tailwind-merge with its default configuration. If your project uses a custom Tailwind theme — for example shadcn/ui tokens like `bg-primary` or custom spacing scales — you may want conflict resolution that understands those utilities. See [`createCn`](#custom-tailwind-configurations) below for the built-in escape hatch.
+
+```ts
+import { extendTailwindMerge } from "tailwind-merge";
+
+const cn = extendTailwindMerge({
+  extend: {
+    classGroups: {
+      "font-size": [{ text: ["primary", "secondary"] }],
+    },
+  },
+});
+
+cn("text-primary", "text-secondary");
+// → "text-secondary" (custom tokens are merged correctly)
+```
+
+`variants` returns plain strings, so it composes with any merge function unchanged. For a drop-in replacement that also handles clsx input types, use `createCn`:
+
+```ts
+import { createCn } from "cn-variants";
+import { extendTailwindMerge } from "tailwind-merge";
+
+const twMerge = extendTailwindMerge({
+  extend: {
+    classGroups: {
+      "bg-color": [{ bg: ["primary", "secondary"] }],
+    },
+  },
+});
+
+export const cn = createCn(twMerge);
+```
+
+`createCn` lives in its own module, so it (and its dependencies) tree-shake away for anyone who only imports `cn` or `variants`.
+
+## React Server Components
+
+`cn` and `variants` are pure, synchronous functions with no module state, side effects, or platform APIs. They work unchanged in React Server Components and any other server environment — no `"use client"` boundary is needed for the library itself.
+
 ## Tree-shaking
 
 `cn` and `variants` are independent. If you only import `variants`, your bundler will tree-shake away `cn` and its dependencies (clsx, tailwind-merge), keeping your bundle minimal.
@@ -271,7 +332,7 @@ The package declares `"sideEffects": false` so bundlers can apply this optimizat
 
 ## Versioning policy
 
-cn-variants follows [semver](https://semver.org/) and pins to the current major of its dependencies: clsx `^2` and tailwind-merge `^3`.
+cn-variants follows [semver](https://semver.org/) and declares `clsx` and `tailwind-merge` as peer dependencies, pinned to their current majors: clsx `^2` and tailwind-merge `^3`. You install and version them alongside cn-variants, so your bundler sees exactly one copy.
 
 - **Patch/minor upstream releases** are absorbed automatically. No action needed on your part.
 - **Major upstream releases** may change observable behavior (e.g. how tailwind-merge resolves conflicting utilities). When this happens, cn-variants will release a new major version that bumps the dependency range.

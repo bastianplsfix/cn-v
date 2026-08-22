@@ -38,5 +38,5 @@ jobs:
       - name: Check bundle size budget
         run: |
           size=$(gzip -c dist/index.mjs | wc -c | tr -d ' ')
-          echo "dist/index.mjs gzipped: ${size} bytes (budget: 1024)"
-          test "$size" -le 1024
+          echo "dist/index.mjs gzipped: ${size} bytes (budget: 1536)"
+          test "$size" -le 1536

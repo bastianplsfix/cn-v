@@ -1,4 +1,4 @@
-import { cn, type Variant, variants } from "cn-variants";
+import { cn, type Variant, type VariantsOf, variants } from "cn-variants";
 
 const buttonTone = variants({
   primary: "bg-indigo-600 text-white",
@@ -7,7 +7,7 @@ const buttonTone = variants({
 
 const buttonSize = variants({
   sm: "px-3 py-1 text-xs",
-  md: "px-4 py-2 text-sm",
+  md: ["px-4", "py-2", "text-sm"],
 });
 
 export type ButtonTone = Variant<typeof buttonTone>;
@@ -26,6 +26,9 @@ export function buttonClasses({
 }: ButtonClassOptions = {}) {
   return cn("rounded-md font-medium", buttonTone(tone), buttonSize(size), className);
 }
+
+const lookup: VariantsOf<typeof buttonSize> = buttonSize;
+lookup("sm");
 
 buttonClasses({ tone: "danger", className: "bg-rose-700" });
 

@@ -1,6 +1,49 @@
 import { expect, expectTypeOf, test } from "vite-plus/test";
 import { cn } from "../src/cn.ts";
+import { createCn } from "../src/create-cn.ts";
 import { type Variant, type VariantFn, variants } from "../src/variants.ts";
+
+// createCn
+
+test("createCn combines class names like cn", () => {
+  const customCn = createCn((classes) => classes);
+  expect(customCn("foo", "bar")).toBe("foo bar");
+});
+
+test("createCn handles clsx input types", () => {
+  const customCn = createCn((classes) => classes);
+  expect(customCn("base", ["flex", undefined], { bold: true }, false, null)).toBe("base flex bold");
+});
+
+test("createCn uses the provided merger", () => {
+  const customCn = createCn(() => "merged");
+  expect(customCn("px-2", "px-4")).toBe("merged");
+});
+
+test("createCn returns empty string for no arguments", () => {
+  const customCn = createCn((classes) => classes);
+  expect(customCn()).toBe("");
+});
+
+test("createCn works with a real extendTailwindMerge merger", async () => {
+  const { extendTailwindMerge } = await import("tailwind-merge");
+  const twMerge = extendTailwindMerge({
+    extend: {
+      classGroups: {
+        "bg-color": [{ bg: ["primary", "secondary"] }],
+      },
+    },
+  });
+  const customCn = createCn(twMerge);
+  expect(customCn("bg-primary px-2", "px-4 bg-secondary")).toBe("px-4 bg-secondary");
+});
+
+test("options snapshot preserves array values untouched", () => {
+  const source = { sm: ["px-2", "py-1"] as const };
+  const size = variants(source);
+  expect(size.options.sm).toEqual(["px-2", "py-1"]);
+  expect(size.options.sm).toBe(source.sm);
+});
 
 // cn
 
@@ -75,6 +118,17 @@ test("variants returns empty string for unknown key", () => {
   expect(size("xl")).toBe("");
 });
 
+test("variants joins array values with spaces", () => {
+  const size = variants({ sm: ["px-2", "py-1"], lg: "px-6 py-3" });
+  expect(size("sm")).toBe("px-2 py-1");
+  expect(size("lg")).toBe("px-6 py-3");
+});
+
+test("variants returns empty string for undefined key", () => {
+  const size = variants({ sm: "text-sm" });
+  expect(size(undefined)).toBe("");
+});
+
 test("variants ignores inherited object properties", () => {
   const size = variants({ sm: "text-sm" });
   const lookup = size as (key: string) => string;
@@ -95,6 +149,11 @@ test("variants exposes frozen options", () => {
   expect(size("sm")).toBe("text-sm");
 });
 
+test("variants supports empty-string keys", () => {
+  const hidden = variants({ "": "hidden" });
+  expect(hidden("")).toBe("hidden");
+});
+
 // types
 
 test("Variant derives the key union from a variant function", () => {
@@ -105,7 +164,7 @@ test("Variant derives the key union from a variant function", () => {
 
 test("variants preserves literal keys in the call signature", () => {
   const size = variants({ sm: "text-sm", lg: "text-lg" });
-  expectTypeOf(size).parameter(0).toEqualTypeOf<"sm" | "lg">();
+  expectTypeOf(size).parameter(0).toEqualTypeOf<"sm" | "lg" | undefined>();
   expectTypeOf(size("sm")).toEqualTypeOf<string>();
 });
 

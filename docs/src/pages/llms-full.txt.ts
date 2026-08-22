@@ -20,7 +20,7 @@ cn("rounded px-2", isActive && "font-bold", "px-4");
 
 ## variants(map)
 
-variants accepts a direct Record<string, string> for one variant axis. It returns a function whose argument is narrowed to the map's literal keys. Call it with a single key, not an options object.
+variants accepts a direct Record<string, string | readonly string[]> for one variant axis. Array values are joined with spaces at lookup time. It returns a function whose argument is narrowed to the map's literal keys; undefined is accepted and returns an empty string. Call it with a single key, not an options object.
 
 ~~~ts
 import { type Variant, variants } from "cn-variants";
@@ -30,11 +30,32 @@ const tone = variants({
   danger: "bg-red-600 text-white",
 });
 
+const size = variants({
+  sm: "px-2 py-1",
+  lg: ["px-6", "py-3"],
+});
+
 type Tone = Variant<typeof tone>; // "primary" | "danger"
 tone("primary");
+size(undefined); // ""
 ~~~
 
 Each variants() call models one axis. Create separate functions for tone, size, state, and other axes.
+
+## createCn(mergeClasses)
+
+createCn builds a cn-style function around a custom tailwind-merge implementation, for projects whose Tailwind theme adds custom utilities (design tokens, plugin classes). The default cn stays zero-config. createCn lives in its own module and tree-shakes away unless imported.
+
+~~~ts
+import { createCn } from "cn-variants";
+import { extendTailwindMerge } from "tailwind-merge";
+
+const twMerge = extendTailwindMerge({
+  extend: { classGroups: { "bg-color": [{ bg: ["primary", "secondary"] }] } },
+});
+
+export const cn = createCn(twMerge);
+~~~
 
 ## Component composition
 
@@ -54,17 +75,19 @@ function buttonClasses({ tone = "primary", size = "md", className }: ButtonProps
 
 ## Runtime contract
 
-- Known variant keys return their class strings unchanged.
-- Unknown and inherited keys return an empty string if static types are bypassed.
-- variants() copies its input map.
+- Known variant keys return their class strings unchanged; array values are joined with spaces.
+- Unknown and inherited keys return an empty string if static types are bypassed; undefined is accepted and returns an empty string.
+- variants() shallow-copies its input map; only the snapshot map itself is frozen, not array values inside it.
 - The returned function exposes a frozen .options snapshot.
 - Creating a variant does not freeze, mutate, or retain the caller's map.
 
 ## Exported types
 
 - Variant<T>: extracts the allowed key union from a variant function.
+- VariantsOf<T>: extracts the lookup interface from a value created by variants().
 - VariantFn<T>: describes a variant lookup and its readonly options.
-- VariantOptions: Record<string, string>.
+- VariantOptions: Record<string, VariantValue>.
+- VariantValue: string | readonly string[].
 - ClassValue: re-exported from clsx for wrapper functions.
 
 ## Non-features
