@@ -3,7 +3,7 @@
 [![npm version](https://img.shields.io/npm/v/cn-variants.svg)](https://www.npmjs.com/package/cn-variants)
 [![CI](https://github.com/bastianplsfix/cn-variants/actions/workflows/ci.yml/badge.svg)](https://github.com/bastianplsfix/cn-variants/actions/workflows/ci.yml)
 
-[Documentation](https://bastianplsfix.github.io/cn-variants/) · [API guide](https://bastianplsfix.github.io/cn-variants/docs/) · [Design decisions](https://bastianplsfix.github.io/cn-variants/design/)
+[Documentation](https://bastianplsfix.github.io/cn-variants/docs/) · [Design decisions](https://bastianplsfix.github.io/cn-variants/docs/#design)
 
 Tiny utilities for working with Tailwind CSS class names. Combines [clsx](https://github.com/lukeed/clsx) + [tailwind-merge](https://github.com/dcastil/tailwind-merge) with a typed `variants` helper.
 
@@ -338,6 +338,16 @@ cn-variants follows [semver](https://semver.org/) and declares `clsx` and `tailw
 - **Major upstream releases** may change observable behavior (e.g. how tailwind-merge resolves conflicting utilities). When this happens, cn-variants will release a new major version that bumps the dependency range.
 
 If `cn("px-2", "px-4")` returns a different result because of an upstream update, that's a breaking change from your perspective and will be treated as one.
+
+## Migrating to v3
+
+v3 declares `clsx` and `tailwind-merge` as peer dependencies. npm 7+ and other modern package managers install peers automatically; if yours doesn't, run:
+
+```bash
+npm install clsx tailwind-merge
+```
+
+Your versions must satisfy clsx `^2` and tailwind-merge `^3`. Nothing else changed for existing code. See the [CHANGELOG](./CHANGELOG.md) for details.
 
 ## License
 

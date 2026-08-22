@@ -1,6 +1,16 @@
 # Changelog
 
-## Unreleased
+## 3.0.0
+
+### Migration guide
+
+v3 makes `clsx` and `tailwind-merge` peer dependencies. npm 7+, pnpm, Yarn Berry, and Bun install peer dependencies automatically, so most projects need no changes. If you skip peer installation (`--legacy-peer-deps`, strict workspaces), add them yourself:
+
+```bash
+npm install clsx tailwind-merge
+```
+
+If you already depend on them (most Tailwind projects do), verify your versions satisfy clsx `^2` and tailwind-merge `^3`. The lookup signature of functions returned by `variants()` widened to also accept `undefined`; code passing unknown keys that previously compiled by accident may now need a type check.
 
 ### Breaking
 

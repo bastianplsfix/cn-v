@@ -97,6 +97,10 @@ cn(
 
 This is plain JavaScript. No new API to learn. For one or two compound cases it's clear and direct. If a component accumulates many compound conditions, that's a signal to reconsider the variant design or reach for a more opinionated tool.
 
+## Why there are no subpath exports
+
+The package exposes a single entry point even though `cn` and `variants` (and `createCn`) live in separate modules. Subpath exports like `cn-variants/variants` were considered to let variants-only consumers skip clsx and tailwind-merge entirely. They were rejected: with `"sideEffects": false` and per-module files, bundlers already tree-shake unused exports, so subpaths only change install-time weight — and since v3 the dependencies are peers that npm installs automatically anyway. The single entry point keeps the export map, type checking, and documentation simple. Revisit only if peer auto-installation proves costly in practice.
+
 ## Why `classFunctions` over `classRegex`
 
 The Tailwind CSS language server supports two ways to detect class strings in custom functions:
