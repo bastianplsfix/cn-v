@@ -6,8 +6,7 @@ cn-variants is ESM-only. Its runtime API has three named exports: cn, createCn, 
 
 ## Documentation
 
-- [API guide](https://bastianplsfix.github.io/cn-variants/docs/): Installation, cn, variants, exported types, component composition, runtime behavior, and Tailwind IntelliSense.
-- [Design decisions](https://bastianplsfix.github.io/cn-variants/design/): Rationale for the small API and the features intentionally left in userland.
+- [API guide](https://bastianplsfix.github.io/cn-variants/docs/): Installation, cn, createCn, variants, exported types, component composition, runtime behavior, design decisions, and Tailwind IntelliSense.
 - [Full LLM reference](https://bastianplsfix.github.io/cn-variants/llms-full.txt): Plain-text API contract and canonical examples.
 
 ## Package and source

@@ -1,5 +1,5 @@
 const origin = "https://bastianplsfix.github.io";
-const pages = ["/cn-variants/", "/cn-variants/docs/", "/cn-variants/design/"];
+const pages = ["/cn-variants/", "/cn-variants/docs/"];
 
 const body = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">

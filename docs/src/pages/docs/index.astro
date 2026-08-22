@@ -79,9 +79,10 @@ const editorConfig = `{
 <Layout title="Documentation" description="Install and use cn-variants with TypeScript and Tailwind CSS.">
   <header class="page-header">
     <p class="eyebrow">Documentation</p>
-    <h1>The complete API.</h1>
+    <h1>cn-variants</h1>
     <p class="page-summary">
-      One merger, one typed lookup, and ordinary JavaScript for everything between them.
+      Installation, API reference, runtime behavior, and the reasoning behind the small surface
+      area.
     </p>
   </header>
 
@@ -97,6 +98,7 @@ const editorConfig = `{
         <li><a href="#runtime">Runtime behavior</a></li>
         <li><a href="#types">Types</a></li>
         <li><a href="#intellisense">IntelliSense</a></li>
+        <li><a href="#design">Design decisions</a></li>
       </ol>
     </aside>
 
@@ -228,6 +230,72 @@ const editorConfig = `{
           The same <code>classFunctions</code> setting can be passed through Zed and JetBrains
           Tailwind language-server configuration.
         </p>
+      </section>
+
+      <section id="design">
+        <h2>Design decisions</h2>
+        <p>Why the API is the size it is:</p>
+        <ol class="decision-list">
+          <li>
+            <h3>A function, not a configuration system</h3>
+            <p>
+              A lookup function narrows its argument to known keys, works with Tailwind
+              IntelliSense, and returns the plain string every class-merging utility already
+              understands.
+            </p>
+          </li>
+          <li>
+            <h3>One axis at a time</h3>
+            <p>
+              Tone, size, and state stay as separate functions. Components decide how to combine
+              them, so there is no named-argument convention or hidden precedence model to learn.
+            </p>
+          </li>
+          <li>
+            <h3>Defaults belong to components</h3>
+            <p>
+              Prop destructuring already expresses defaults at the boundary where they matter.
+              Moving them into a variant definition would create a second source of truth.
+            </p>
+          </li>
+          <li>
+            <h3>Compound styles are conditions</h3>
+            <p>
+              JavaScript can already say “primary and large.” Keeping the expression in{" "}
+              <code>cn()</code> gives TypeScript, refactors, and debuggers the full picture.
+            </p>
+          </li>
+          <li>
+            <h3>Invalid runtime keys fail soft</h3>
+            <p>
+              TypeScript rejects invalid keys during development. If types are bypassed, an empty
+              class string is safer than crashing a render over a styling concern.
+            </p>
+          </li>
+          <li>
+            <h3>Options are a snapshot</h3>
+            <p>
+              The exposed <code>.options</code> object is frozen and detached from the caller's
+              map. It supports inspection and type extraction without taking ownership of user
+              data.
+            </p>
+          </li>
+          <li>
+            <h3>Dependencies stay peer dependencies</h3>
+            <p>
+              clsx and tailwind-merge are peers so consumers control the versions they use and
+              bundlers see exactly one copy of each.
+            </p>
+          </li>
+          <li>
+            <h3>Unused code should disappear</h3>
+            <p>
+              <code>cn</code>, <code>createCn</code>, and <code>variants</code> live in separate
+              modules and the package is marked side-effect free. Importing only the typed lookup
+              does not need to retain the class merger.
+            </p>
+          </li>
+        </ol>
       </section>
     </article>
   </div>

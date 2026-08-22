@@ -19,26 +19,21 @@ cn("rounded px-4", tone("primary"), className);`;
 
 <Layout>
   <section class="hero">
-    <p class="eyebrow">Tailwind class utilities</p>
-    <h1>Small primitives. Typed variants.</h1>
+    <h1>cn-variants</h1>
     <p class="hero-summary">
-      Combine class names, resolve Tailwind conflicts, and model variants without learning another
-      configuration language.
+      Two utilities for Tailwind class names: <code>cn</code> merges classes and resolves
+      conflicts, <code>variants</code> is a typed lookup for variant maps. That's the whole API.
     </p>
     <div class="actions">
-      <a class="button primary" href={docsHref}>Read the docs</a>
-      <a class="button" href="https://www.npmjs.com/package/cn-variants">View on npm</a>
+      <a class="button primary" href={docsHref}>Documentation</a>
+      <a class="button" href="https://www.npmjs.com/package/cn-variants">npm</a>
     </div>
   </section>
 
   <section class="home-section">
     <div class="section-grid">
-      <h2 class="section-heading">The whole idea</h2>
+      <h2 class="section-heading">Example</h2>
       <div class="section-content">
-        <p class="hero-summary">
-          Two functions. Plain strings in, plain strings out. TypeScript handles the guardrails and
-          JavaScript handles the composition.
-        </p>
         <CodeBlock code={example} label="button.ts" />
       </div>
     </div>
@@ -46,16 +41,20 @@ cn("rounded px-4", tone("primary"), className);`;
 
   <section class="home-section">
     <div class="section-grid">
-      <h2 class="section-heading">Two primitives</h2>
+      <h2 class="section-heading">API</h2>
       <div class="section-content">
         <ul class="primitive-list">
           <li>
             <h3>cn(...inputs)</h3>
-            <p>All clsx input forms, with Tailwind conflicts resolved from left to right.</p>
+            <p>Accepts every clsx input form and resolves Tailwind conflicts left to right.</p>
           </li>
           <li>
             <h3>variants(map)</h3>
-            <p>A typed lookup for one variant axis, with literal-key autocomplete.</p>
+            <p>A typed lookup function for one variant axis.</p>
+          </li>
+          <li>
+            <h3>createCn(merge)</h3>
+            <p>Builds a cn-style function around a custom tailwind-merge configuration.</p>
           </li>
         </ul>
       </div>
@@ -64,27 +63,14 @@ cn("rounded px-4", tone("primary"), className);`;
 
   <section class="home-section">
     <div class="section-grid">
-      <h2 class="section-heading">Deliberately less</h2>
+      <h2 class="section-heading">Notes</h2>
       <div class="section-content">
-        <div class="fact-row">
-          <div class="fact">
-            <strong>ESM only</strong>
-            <span>One modern package boundary</span>
-          </div>
-          <div class="fact">
-            <strong>Zero DSL</strong>
-            <span>Conditions stay JavaScript</span>
-          </div>
-          <div class="fact">
-            <strong>Tree-shakeable</strong>
-            <span>Import only what you use</span>
-          </div>
-        </div>
-        <p>
-          Defaults live in your component. Compound variants are ordinary conditions. The library
-          does not take ownership of decisions TypeScript and JavaScript already express clearly.
-        </p>
-        <p><a href={`${base}/design/`}>Read the design decisions →</a></p>
+        <ul>
+          <li>ESM-only, no CommonJS entry point.</li>
+          <li>Tree-shakeable: importing <code>variants</code> alone does not pull in clsx or tailwind-merge in a bundler.</li>
+          <li>No configuration objects. Defaults and compound conditions are ordinary JavaScript in your component.</li>
+        </ul>
+        <p><a href={`${docsHref}#design`}>Design decisions</a></p>
       </div>
     </div>
   </section>
