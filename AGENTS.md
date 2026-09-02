@@ -10,7 +10,7 @@ cn-variants is a tiny, ESM-only TypeScript library with three runtime exports: `
 - `clsx` and `tailwind-merge` are peer dependencies (clsx `^2.1.1`, tailwind-merge `^3.5.0`).
 - Keep the `const` generic on `variants()` so keys remain literal types without `as const`.
 - Invalid variant keys are TypeScript errors. If types are bypassed, unknown, inherited, or undefined runtime keys return `""`.
-- `.options` is a frozen shallow snapshot of a null-prototype object; never freeze, mutate, or retain the caller's map, and treat array values as read-only.
+- `.options` is a frozen snapshot of a null-prototype object. Never freeze, mutate, or retain the caller's map. Array values are copied and frozen so later mutation of the source does not change lookup or `.options`.
 - Defaults and compound variants belong in userland JavaScript, not a new configuration DSL.
 - Keep `cn` and `variants` in separate modules so unused functionality and dependencies remain tree-shakeable.
 - Preserve the ESM-only export map and `"sideEffects": false` unless a major release explicitly changes that contract.

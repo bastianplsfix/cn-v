@@ -149,13 +149,18 @@ test("variants options snapshot has a null prototype", () => {
   expect(Object.getPrototypeOf(size.options)).toBeNull();
 });
 
-test("options snapshot is a shallow copy of array values", () => {
+test("options snapshot copies and freezes array values", () => {
   const source = { sm: ["px-2", "py-1"] as string[] };
   const size = variants(source);
   expect(size.options.sm).toEqual(["px-2", "py-1"]);
-  expect(size.options.sm).toBe(source.sm);
+  expect(size.options.sm).not.toBe(source.sm);
+  expect(Object.isFrozen(size.options.sm)).toBe(true);
+  expect(Object.isFrozen(source.sm)).toBe(false);
+
   source.sm.push("text-sm");
-  expect(size.options.sm).toEqual(["px-2", "py-1", "text-sm"]);
+  expect(size("sm")).toBe("px-2 py-1");
+  expect(size.options.sm).toEqual(["px-2", "py-1"]);
+  expect(source.sm).toEqual(["px-2", "py-1", "text-sm"]);
 });
 
 test("variants supports empty-string keys", () => {

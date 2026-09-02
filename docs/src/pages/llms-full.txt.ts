@@ -44,7 +44,7 @@ Each variants() call models one axis. Create separate functions for tone, size, 
 
 ## createCn(mergeClasses)
 
-createCn builds a cn-style function around a custom tailwind-merge implementation, for projects whose Tailwind theme adds custom utilities (design tokens, plugin classes). The default cn stays zero-config. createCn lives in its own module and tree-shakes away unless imported.
+createCn builds a cn-style function around a custom tailwind-merge implementation, for projects whose Tailwind theme adds custom utilities (design tokens, plugin classes). The default cn stays zero-config. The named createCn export tree-shakes when unused. cn uses that factory internally, so importing cn retains the factory code. Importing only variants still does not pull clsx or tailwind-merge in a bundler.
 
 ~~~ts
 import { createCn } from "cn-variants";
@@ -77,8 +77,9 @@ function buttonClasses({ tone = "primary", size = "md", className }: ButtonProps
 
 - Known variant keys return their class strings unchanged; array values are joined with spaces.
 - Unknown and inherited keys return an empty string if static types are bypassed; undefined is accepted and returns an empty string.
-- variants() shallow-copies its input map; only the snapshot map itself is frozen, not array values inside it.
-- The returned function exposes a frozen .options snapshot.
+- Empty-string keys are allowed and behave like any other key, so variants({ "": "hidden" })("") returns "hidden".
+- variants() copies its input map into a frozen snapshot; array values are copied and frozen so later mutation of the source does not change lookup or .options.
+- The returned function exposes that frozen .options snapshot.
 - Creating a variant does not freeze, mutate, or retain the caller's map.
 
 ## Exported types

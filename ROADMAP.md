@@ -16,7 +16,7 @@ Items below have been decided. Kept here for historical context.
 
 ### ~~`createCn` — custom tailwind-merge configuration~~
 
-**Shipped.** `createCn(mergeClasses)` builds a `cn`-style function around a custom tailwind-merge implementation (e.g. from `extendTailwindMerge`). It lives in its own module so it tree-shakes away for consumers who don't import it.
+**Shipped.** `createCn(mergeClasses)` builds a `cn`-style function around a custom tailwind-merge implementation (e.g. from `extendTailwindMerge`). The named export tree-shakes when unused. `cn` uses the factory internally; importing only `variants` still does not pull clsx or tailwind-merge.
 
 ### ~~Peer dependencies vs direct dependencies~~
 
