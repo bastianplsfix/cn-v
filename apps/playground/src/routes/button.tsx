@@ -1,11 +1,8 @@
 import { Button, buttonSize, buttonTone } from "@cn-variants/ui";
 import { createFileRoute } from "@tanstack/react-router";
-import { GalleryPage } from "../components/gallery";
+import { CodePanel, GalleryPage } from "../components/gallery";
 import { Knobs, knob, usage, useKnobs } from "../components/knobs";
 import { PropsTable, type PropDoc } from "../components/props-table";
-
-const toneKeys = Object.keys(buttonTone.options) as Array<keyof typeof buttonTone.options>;
-const sizeKeys = Object.keys(buttonSize.options) as Array<keyof typeof buttonSize.options>;
 
 const schema = {
   label: knob.text("Label"),
@@ -95,29 +92,16 @@ function ButtonPage() {
       controls={<Knobs schema={schema} values={values} onChange={setKnob} />}
       propDocs={<PropsTable docs={propDocs} />}
       preview={
-        <div className="flex flex-col items-center gap-10">
-          <Button
-            tone={values.tone}
-            size={values.size}
-            rounded={values.rounded}
-            disabled={values.disabled}
-            icon={values.iconPosition === "none" ? undefined : <CircleIcon />}
-            iconPosition={values.iconPosition === "none" ? undefined : values.iconPosition}
-          >
-            {values.label || "Label"}
-          </Button>
-          <div className="flex flex-col items-center gap-4">
-            {sizeKeys.map((size) => (
-              <div key={size} className="flex flex-wrap items-center justify-center gap-3">
-                {toneKeys.map((tone) => (
-                  <Button key={`${tone}-${size}`} tone={tone} size={size}>
-                    {tone} {size}
-                  </Button>
-                ))}
-              </div>
-            ))}
-          </div>
-        </div>
+        <Button
+          tone={values.tone}
+          size={values.size}
+          rounded={values.rounded}
+          disabled={values.disabled}
+          icon={values.iconPosition === "none" ? undefined : <CircleIcon />}
+          iconPosition={values.iconPosition === "none" ? undefined : values.iconPosition}
+        >
+          {values.label || "Label"}
+        </Button>
       }
     >
       <section aria-label="Variant maps" className="flex flex-col gap-3">
@@ -126,9 +110,9 @@ function ButtonPage() {
           Live lookups from <code>buttonTone.options</code> and <code>buttonSize.options</code>.
           Defaults and compound styles stay in the component, not in these maps.
         </p>
-        <pre className="overflow-x-auto border border-line-subtle bg-surface-2 p-3 font-mono text-xs leading-relaxed text-ink">
-          {`${formatMap("buttonTone", buttonTone.options)}\n\n${formatMap("buttonSize", buttonSize.options)}`}
-        </pre>
+        <CodePanel
+          code={`${formatMap("buttonTone", buttonTone.options)}\n\n${formatMap("buttonSize", buttonSize.options)}`}
+        />
       </section>
     </GalleryPage>
   );
