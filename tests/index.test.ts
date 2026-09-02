@@ -2,76 +2,9 @@ import { expect, expectTypeOf, test } from "vite-plus/test";
 import type { ClassValue } from "clsx";
 import { cn } from "../src/cn.ts";
 import { createCn, type MergeClasses } from "../src/create-cn.ts";
-import { type Variant, type VariantFn, variants } from "../src/variants.ts";
-
-// createCn
-
-test("MergeClasses describes a merger function", () => {
-  const merger: MergeClasses = (classes) => classes;
-  expect(createCn(merger)("foo", "bar")).toBe("foo bar");
-});
-
-test("createCn combines class names like cn", () => {
-  const customCn = createCn((classes) => classes);
-  expect(customCn("foo", "bar")).toBe("foo bar");
-});
-
-test("createCn handles clsx input types", () => {
-  const customCn = createCn((classes) => classes);
-  expect(customCn("base", ["flex", undefined], { bold: true }, false, null)).toBe("base flex bold");
-});
-
-test("createCn uses the provided merger", () => {
-  const customCn = createCn(() => "merged");
-  expect(customCn("px-2", "px-4")).toBe("merged");
-});
-
-test("createCn returns empty string for no arguments", () => {
-  const customCn = createCn((classes) => classes);
-  expect(customCn()).toBe("");
-});
-
-test("createCn accepts full ClassValue inputs", () => {
-  const customCn = createCn((classes) => classes);
-  const input: ClassValue[] = ["px-2", ["flex", false], { bold: true }, undefined];
-  expectTypeOf(customCn).parameter(0).toEqualTypeOf<ClassValue>();
-  expect(customCn(...input)).toBe("px-2 flex bold");
-  expectTypeOf(customCn("a")).toEqualTypeOf<string>();
-});
-
-test("createCn works with a real extendTailwindMerge merger", async () => {
-  const { extendTailwindMerge } = await import("tailwind-merge");
-  const twMerge = extendTailwindMerge({
-    extend: {
-      classGroups: {
-        "bg-color": [{ bg: ["primary", "secondary"] }],
-      },
-    },
-  });
-  const customCn = createCn(twMerge);
-  expect(customCn("bg-primary px-2", "px-4 bg-secondary")).toBe("px-4 bg-secondary");
-});
-
-test("options snapshot preserves array values untouched", () => {
-  const source = { sm: ["px-2", "py-1"] as const };
-  const size = variants(source);
-  expect(size.options.sm).toEqual(["px-2", "py-1"]);
-  expect(size.options.sm).toBe(source.sm);
-});
+import { type Variant, type VariantFn, type VariantsOf, variants } from "../src/variants.ts";
 
 // cn
-
-test("variants options snapshot has a null prototype", () => {
-  const size = variants({ sm: "text-sm" });
-  expect(Object.getPrototypeOf(size.options)).toBeNull();
-});
-
-test("options snapshot shares array references with the source", () => {
-  const source = { sm: ["px-2"] as string[] };
-  const size = variants(source);
-  source.sm.push("text-sm");
-  expect(size.options.sm).toEqual(["px-2", "text-sm"]);
-});
 
 test("cn merges class names", () => {
   expect(cn("foo", "bar")).toBe("foo bar");
@@ -117,17 +50,34 @@ test("cn handles mixed argument types", () => {
   );
 });
 
-// integration
+// createCn
 
-test("variants output composes with cn", () => {
-  const color = variants({
-    primary: "bg-blue-500 text-white",
-    danger: "bg-red-500 text-white",
+test("createCn applies clsx then the provided merger", () => {
+  const merger: MergeClasses = (classes) => classes;
+  const customCn = createCn(merger);
+  expectTypeOf(customCn).toEqualTypeOf<typeof cn>();
+  expectTypeOf(customCn).parameter(0).toEqualTypeOf<ClassValue>();
+  expectTypeOf(customCn("a")).toEqualTypeOf<string>();
+  expect(customCn()).toBe("");
+  expect(customCn("base", ["flex", undefined], { bold: true }, false, null)).toBe("base flex bold");
+});
+
+test("createCn uses the provided merger", () => {
+  const customCn = createCn(() => "merged");
+  expect(customCn("px-2", "px-4")).toBe("merged");
+});
+
+test("createCn works with a real extendTailwindMerge merger", async () => {
+  const { extendTailwindMerge } = await import("tailwind-merge");
+  const twMerge = extendTailwindMerge({
+    extend: {
+      classGroups: {
+        "bg-color": [{ bg: ["primary", "secondary"] }],
+      },
+    },
   });
-  const size = variants({ sm: "px-2 py-1", lg: "px-6 py-3" });
-  expect(cn("rounded", color("primary"), size("lg"), "px-8")).toBe(
-    "rounded bg-blue-500 text-white py-3 px-8",
-  );
+  const customCn = createCn(twMerge);
+  expect(customCn("bg-primary px-2", "px-4 bg-secondary")).toBe("px-4 bg-secondary");
 });
 
 // variants
@@ -194,9 +144,36 @@ test("variants exposes frozen options", () => {
   expect(size("sm")).toBe("text-sm");
 });
 
+test("variants options snapshot has a null prototype", () => {
+  const size = variants({ sm: "text-sm" });
+  expect(Object.getPrototypeOf(size.options)).toBeNull();
+});
+
+test("options snapshot is a shallow copy of array values", () => {
+  const source = { sm: ["px-2", "py-1"] as string[] };
+  const size = variants(source);
+  expect(size.options.sm).toEqual(["px-2", "py-1"]);
+  expect(size.options.sm).toBe(source.sm);
+  source.sm.push("text-sm");
+  expect(size.options.sm).toEqual(["px-2", "py-1", "text-sm"]);
+});
+
 test("variants supports empty-string keys", () => {
   const hidden = variants({ "": "hidden" });
   expect(hidden("")).toBe("hidden");
+});
+
+// integration
+
+test("variants output composes with cn", () => {
+  const color = variants({
+    primary: "bg-blue-500 text-white",
+    danger: "bg-red-500 text-white",
+  });
+  const size = variants({ sm: "px-2 py-1", lg: "px-6 py-3" });
+  expect(cn("rounded", color("primary"), size("lg"), "px-8")).toBe(
+    "rounded bg-blue-500 text-white py-3 px-8",
+  );
 });
 
 // types
@@ -216,4 +193,9 @@ test("variants preserves literal keys in the call signature", () => {
 test("variants return type is assignable to VariantFn", () => {
   const size: VariantFn<{ sm: string; lg: string }> = variants({ sm: "text-sm", lg: "text-lg" });
   expect(size("sm")).toBe("text-sm");
+});
+
+test("VariantsOf extracts the lookup interface", () => {
+  const size = variants({ sm: "text-sm", lg: "text-lg" });
+  expectTypeOf<VariantsOf<typeof size>>().toEqualTypeOf<typeof size>();
 });

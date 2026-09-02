@@ -4,12 +4,7 @@ import { type ClassValue, clsx } from "clsx";
 export type MergeClasses = (classes: string) => string;
 
 /**
- * Creates a `cn` function with a custom Tailwind merge implementation.
- *
- * The default {@link cn} hardcodes tailwind-merge's default configuration.
- * Projects with custom utilities — design tokens like `bg-primary` or
- * plugin classes like `animate-fade-in` — can pass a configured merger
- * built with tailwind-merge's `extendTailwindMerge` instead:
+ * Creates a `cn`-style function around a custom Tailwind merge implementation.
  *
  * @example
  * ```ts

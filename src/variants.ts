@@ -6,15 +6,9 @@ export type VariantOptions = Record<string, VariantValue>;
 
 /** A typed class lookup created by {@link variants}. */
 export interface VariantFn<TOptions extends VariantOptions> {
-  /**
-   * Returns the class string for a variant key.
-   *
-   * Invalid keys are rejected by TypeScript. `undefined` is accepted so
-   * optional props can be passed through directly. Untyped runtime calls
-   * with an unknown or inherited key return an empty string.
-   */
+  /** Returns the class string for a variant key, or `""` for `undefined` and unknown runtime keys. */
   (key: keyof TOptions | undefined): string;
-  /** A frozen snapshot of the variant map for safe runtime inspection and type extraction. */
+  /** Frozen snapshot of the variant map. */
   readonly options: Readonly<TOptions>;
 }
 
@@ -44,13 +38,8 @@ function toClassString(value: string | readonly string[]): string {
 /**
  * Creates a typed class lookup for one variant axis.
  *
- * Pass the key-to-class map directly. Values can be a class string or an
- * array of class strings, which are joined with spaces. Defaults and
- * compound variants stay in the consuming component and can be composed
- * with {@link cn}. The input map is copied; the returned function exposes
- * that frozen snapshot as `.options`. Only the snapshot itself is frozen:
- * array values inside it are not frozen, so callers should treat them as
- * read-only. Empty-string keys are allowed and behave like any other key.
+ * Pass a key-to-class map. Values may be a class string or an array of class
+ * strings, which are joined with spaces.
  *
  * @example
  * ```ts
@@ -69,9 +58,7 @@ export function variants<const TOptions extends VariantOptions>(
   const options = Object.freeze(Object.assign(Object.create(null), map));
   return Object.assign(
     (key: keyof TOptions | undefined): string =>
-      key !== undefined && Object.prototype.hasOwnProperty.call(options, key)
-        ? toClassString(options[key])
-        : "",
+      key !== undefined && Object.hasOwn(options, key) ? toClassString(options[key]) : "",
     {
       options,
     },
