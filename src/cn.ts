@@ -1,12 +1,9 @@
-import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
+import { createCn } from "./create-cn.ts";
 
 /**
- * Combines class values with `clsx`, then resolves conflicting Tailwind CSS
- * utilities with `tailwind-merge`.
- *
- * Later conflicting utilities win, so put a caller-provided `className` last
- * when it should override component defaults.
+ * Combines class values with `clsx` and resolves Tailwind conflicts with
+ * `tailwind-merge`. Later conflicting utilities win.
  *
  * @example
  * ```ts
@@ -14,6 +11,4 @@ import { twMerge } from "tailwind-merge";
  * // "rounded font-bold px-4" when condition is true
  * ```
  */
-export function cn(...inputs: ClassValue[]): string {
-  return twMerge(clsx(inputs));
-}
+export const cn = /* @__PURE__ */ createCn(twMerge);

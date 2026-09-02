@@ -92,17 +92,14 @@ size.options.sm = "text-base";
   run("vp", ["install", "--ignore-scripts"]);
   run("node", ["smoke.mjs"]);
 
-  // Peer dependencies must be installed automatically (npm 7+).
+  // npm 7+ installs peer dependencies automatically.
   for (const peer of ["clsx", "tailwind-merge"]) {
     if (!readdirSync(join(smokeRoot, "node_modules")).includes(peer)) {
       throw new Error(`Peer dependency ${peer} was not installed automatically`);
     }
   }
 
-  // A variants-only consumer exercises the array-value and undefined-key
-  // paths against the packed package. Note this runs with peers installed:
-  // tree-shaking away cn's dependencies requires a bundler, which raw Node
-  // is not, and the single entry point statically imports clsx.
+  // Raw Node does not tree-shake; peers remain even for a variants-only import.
   writeFileSync(
     join(smokeRoot, "smoke-variants-only.mjs"),
     `

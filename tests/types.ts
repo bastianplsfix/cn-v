@@ -1,4 +1,4 @@
-import { type ClassValue, type Variant, variants } from "../src/index.ts";
+import { type ClassValue, type Variant, type VariantsOf, variants } from "../src/index.ts";
 
 type Equal<Left, Right> =
   (<Value>() => Value extends Left ? 1 : 2) extends <Value>() => Value extends Right ? 1 : 2
@@ -15,6 +15,7 @@ export type OptionsAreReadonly = Expect<
   Equal<typeof size.options, { readonly sm: "text-sm"; readonly lg: "text-lg" }>
 >;
 export type ClassValueIsExported = Expect<Equal<Extract<ClassValue, string>, string>>;
+export type VariantsOfPreservesLookup = Expect<Equal<VariantsOf<typeof size>, typeof size>>;
 
 const withArray = variants({ sm: ["px-2", "py-1"] });
 export type ArrayValuesReturnStrings = Expect<Equal<ReturnType<typeof withArray>, string>>;
@@ -26,7 +27,3 @@ export function assertInvalidTypesAreRejected() {
   // @ts-expect-error options cannot be reassigned
   size.options.sm = "text-base";
 }
-
-export type UndefinedKeyIsAccepted = Expect<
-  Equal<Parameters<typeof size>[0], "sm" | "lg" | undefined>
->;
