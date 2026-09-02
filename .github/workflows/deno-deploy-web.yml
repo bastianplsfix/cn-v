@@ -70,7 +70,10 @@ jobs:
 
       - name: Verify deployment configuration
         run: |
-          test -n "$DENO_DEPLOY_TOKEN"
+          if [ -z "$DENO_DEPLOY_TOKEN" ]; then
+            echo "::error::DENO_DEPLOY_TOKEN is not set. Add this repository secret to deploy to Deno (org bs, app cn-variants)."
+            exit 1
+          fi
           test "$DENO_DEPLOY_ORG" = "bs"
           test "$DENO_DEPLOY_APP" = "cn-variants"
 
