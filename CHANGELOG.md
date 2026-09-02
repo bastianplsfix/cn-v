@@ -1,13 +1,19 @@
 # Changelog
 
-## Unreleased
+## 3.0.1
 
 ### Fixed
 
 - `variants()` copies and freezes array values in the `.options` snapshot. Mutating a source array after `variants()` no longer changes lookup or `.options`. Callers who relied on that aliasing will no longer see it.
 
+### Changed
+
+- Implement `cn` through `createCn(twMerge)` internally; the public `function cn` signature is unchanged
+- Use `Object.hasOwn` for the own-key check in `variants()`
+
 ### Documentation
 
+- Replaced the Astro docs site with a Vite+ playground on `cn-variants.com`
 - Playground Badge demo: one `variants()` tone axis next to the two-axis Button
 - GitHub Pages docs now use Vite `base` `/` so assets resolve on `cn-variants.com`
 - Documented empty-string keys in DESIGN.md and the docs runtime contract
