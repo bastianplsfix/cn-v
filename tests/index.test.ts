@@ -1,10 +1,14 @@
 import { expect, expectTypeOf, test } from "vite-plus/test";
 import type { ClassValue } from "clsx";
 import { cn } from "../src/cn.ts";
-import { createCn, type MergeClasses } from "../src/create-cn.ts";
+import { createCn, type Cn, type MergeClasses } from "../src/create-cn.ts";
 import { type Variant, type VariantFn, type VariantsOf, variants } from "../src/variants.ts";
 
 // cn
+
+test("cn is typed as Cn", () => {
+  expectTypeOf(cn).toEqualTypeOf<Cn>();
+});
 
 test("cn merges class names", () => {
   expect(cn("foo", "bar")).toBe("foo bar");
@@ -52,9 +56,10 @@ test("cn handles mixed argument types", () => {
 
 // createCn
 
-test("createCn applies clsx then the provided merger", () => {
+test("createCn returns Cn type", () => {
   const merger: MergeClasses = (classes) => classes;
   const customCn = createCn(merger);
+  expectTypeOf(customCn).toEqualTypeOf<Cn>();
   expectTypeOf(customCn).toEqualTypeOf<typeof cn>();
   expectTypeOf(customCn).parameter(0).toEqualTypeOf<ClassValue>();
   expectTypeOf(customCn("a")).toEqualTypeOf<string>();
