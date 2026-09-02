@@ -8,6 +8,7 @@
 
 ### Documentation
 
+- Playground Badge demo: one `variants()` tone axis next to the two-axis Button
 - GitHub Pages docs now use Vite `base` `/` so assets resolve on `cn-variants.com`
 - Documented empty-string keys in DESIGN.md and the docs runtime contract
 - Corrected `VariantOptions`: keys are variant names for one axis, not class names

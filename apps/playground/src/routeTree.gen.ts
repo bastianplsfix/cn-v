@@ -10,12 +10,18 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as BadgeRouteImport } from './routes/badge'
 import { Route as ButtonRouteImport } from './routes/button'
 import { Route as DocsRouteImport } from './routes/docs'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BadgeRoute = BadgeRouteImport.update({
+  id: '/badge',
+  path: '/badge',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ButtonRoute = ButtonRouteImport.update({
@@ -31,30 +37,34 @@ const DocsRoute = DocsRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/badge': typeof BadgeRoute
   '/button': typeof ButtonRoute
   '/docs': typeof DocsRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/badge': typeof BadgeRoute
   '/button': typeof ButtonRoute
   '/docs': typeof DocsRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/badge': typeof BadgeRoute
   '/button': typeof ButtonRoute
   '/docs': typeof DocsRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/button' | '/docs'
+  fullPaths: '/' | '/badge' | '/button' | '/docs'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/button' | '/docs'
-  id: '__root__' | '/' | '/button' | '/docs'
+  to: '/' | '/badge' | '/button' | '/docs'
+  id: '__root__' | '/' | '/badge' | '/button' | '/docs'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  BadgeRoute: typeof BadgeRoute
   ButtonRoute: typeof ButtonRoute
   DocsRoute: typeof DocsRoute
 }
@@ -66,6 +76,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/badge': {
+      id: '/badge'
+      path: '/badge'
+      fullPath: '/badge'
+      preLoaderRoute: typeof BadgeRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/button': {
@@ -87,6 +104,7 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  BadgeRoute: BadgeRoute,
   ButtonRoute: ButtonRoute,
   DocsRoute: DocsRoute,
 }
