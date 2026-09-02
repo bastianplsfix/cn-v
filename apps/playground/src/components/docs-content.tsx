@@ -360,17 +360,17 @@ export function DocsContent() {
             <code>cn()</code> gives TypeScript, refactors, and debuggers the full picture.
           </Decision>
           <Decision title="Invalid runtime keys fail soft">
-            TypeScript rejects invalid keys during development. If types are bypassed, an empty class
-            string is safer than crashing a render over a styling concern.
+            TypeScript rejects invalid keys during development. If types are bypassed, an empty
+            class string is safer than crashing a render over a styling concern.
           </Decision>
           <Decision title="Options are a snapshot">
             The exposed <code>.options</code> object is a frozen snapshot of the caller&apos;s map,
-            including copied frozen arrays. It supports inspection and type extraction without taking
-            ownership of user data.
+            including copied frozen arrays. It supports inspection and type extraction without
+            taking ownership of user data.
           </Decision>
           <Decision title="Dependencies stay peer dependencies">
-            clsx and tailwind-merge are peers so consumers control the versions they use and bundlers
-            see exactly one copy of each.
+            clsx and tailwind-merge are peers so consumers control the versions they use and
+            bundlers see exactly one copy of each.
           </Decision>
           <Decision title="Unused code should disappear">
             <code>cn</code>, <code>createCn</code>, and <code>variants</code> live in separate
