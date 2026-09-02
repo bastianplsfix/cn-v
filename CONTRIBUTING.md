@@ -40,7 +40,7 @@ vp run docs-check
 vp run docs-build
 ```
 
-To work on the playground locally, start it from the repository root with `vp run docs`. The published npm package remains the repo-root `cn-variants` library; `apps/playground` and `packages/ui` are private workspace packages.
+To work on the playground locally, start it from the repository root with `vp run docs`. Production and preview builds use `PLAYGROUND_BASE=/` and deploy to Deno Deploy (`cn-variants.bs.deno.net`) from `.github/workflows/deno-deploy-web.yml`. The published npm package remains the repo-root `cn-variants` library; `apps/playground` and `packages/ui` are private workspace packages.
 
 ## Committing
 

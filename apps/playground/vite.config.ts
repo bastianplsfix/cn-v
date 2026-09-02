@@ -7,8 +7,7 @@ import { defineConfig } from "vite-plus";
 const repoRoot = fileURLToPath(new URL("../..", import.meta.url));
 
 export default defineConfig({
-  base:
-    process.env.PLAYGROUND_BASE ?? (process.env.NODE_ENV === "production" ? "/cn-variants/" : "/"),
+  base: process.env.PLAYGROUND_BASE ?? "/",
   resolve: {
     alias: {
       "#": fileURLToPath(new URL("./src", import.meta.url)),

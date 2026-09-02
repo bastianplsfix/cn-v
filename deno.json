@@ -1,0 +1,13 @@
+{
+  "deploy": {
+    "org": "bs",
+    "app": "cn-variants",
+    "install": "npm ci",
+    "build": "PLAYGROUND_BASE=/ npm run docs-build",
+    "runtime": {
+      "type": "static",
+      "cwd": "apps/playground/dist",
+      "spa": true
+    }
+  }
+}

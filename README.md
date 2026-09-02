@@ -3,7 +3,9 @@
 [![npm version](https://img.shields.io/npm/v/cn-variants.svg)](https://www.npmjs.com/package/cn-variants)
 [![CI](https://github.com/bastianplsfix/cn-variants/actions/workflows/ci.yml/badge.svg)](https://github.com/bastianplsfix/cn-variants/actions/workflows/ci.yml)
 
-[Documentation](https://bastianplsfix.github.io/cn-variants/) · [Button playground](https://bastianplsfix.github.io/cn-variants/button) · [Design decisions](https://bastianplsfix.github.io/cn-variants/#design)
+[Documentation](https://cn-variants.bs.deno.net/) · [Button playground](https://cn-variants.bs.deno.net/button) · [Design decisions](https://cn-variants.bs.deno.net/#design)
+
+The playground is hosted on Deno Deploy at [cn-variants.bs.deno.net](https://cn-variants.bs.deno.net/). The custom domain `cn-variants.com` will be added after DNS is configured.
 
 Tiny utilities for working with Tailwind CSS class names. Combines [clsx](https://github.com/lukeed/clsx) + [tailwind-merge](https://github.com/dcastil/tailwind-merge) with a typed `variants` helper.
 

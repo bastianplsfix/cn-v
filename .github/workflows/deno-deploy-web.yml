@@ -1,0 +1,106 @@
+name: Deploy Web
+
+on:
+  workflow_dispatch:
+  pull_request:
+    branches: [main]
+    paths:
+      - "apps/playground/**"
+      - "packages/ui/**"
+      - "src/**"
+      - "package.json"
+      - "package-lock.json"
+      - "deno.json"
+      - ".github/workflows/deno-deploy-web.yml"
+  push:
+    branches: [main]
+    paths:
+      - "apps/playground/**"
+      - "packages/ui/**"
+      - "src/**"
+      - "package.json"
+      - "package-lock.json"
+      - "deno.json"
+      - ".github/workflows/deno-deploy-web.yml"
+
+concurrency:
+  group: deno-deploy-web-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - uses: voidzero-dev/setup-vp@250f29ce396baf5e8f24498e17c0dfdebabc26eb # v1.15.0
+        with:
+          version: 0.2.5
+          node-version: 24
+          cache: true
+
+      - run: vp install --frozen-lockfile --ignore-scripts
+
+      - run: vp run docs-check
+
+      - run: vp run docs-build
+        env:
+          PLAYGROUND_BASE: /
+
+  deploy:
+    needs: [validate]
+    if: github.event_name == 'workflow_dispatch' || github.event_name == 'push' || github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    env:
+      DENO_DEPLOY_TOKEN: ${{ secrets.DENO_DEPLOY_TOKEN }}
+      DENO_DEPLOY_ORG: bs
+      DENO_DEPLOY_APP: cn-variants
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Set up Deno
+        uses: denoland/setup-deno@22d081ff2d3a40755e97629de92e3bcbfa7cf2ed # v2.0.5
+        with:
+          deno-version: v2.x
+
+      - name: Verify deployment configuration
+        run: |
+          test -n "$DENO_DEPLOY_TOKEN"
+          test "$DENO_DEPLOY_ORG" = "bs"
+          test "$DENO_DEPLOY_APP" = "cn-variants"
+
+      - name: Ensure Deno Deploy app exists
+        run: |
+          if ! deno run -A --no-config --node-modules-dir=auto jsr:@deno/deploy --config deno.json apps get --org "$DENO_DEPLOY_ORG" --app "$DENO_DEPLOY_APP"; then
+            deno run -A --no-config --node-modules-dir=auto jsr:@deno/deploy --config deno.json create \
+              --org "$DENO_DEPLOY_ORG" \
+              --app "$DENO_DEPLOY_APP" \
+              --source local \
+              --do-not-use-detected-build-config \
+              --runtime-mode static \
+              --static-dir apps/playground/dist \
+              --single-page-app \
+              --install-command "npm ci" \
+              --build-command "PLAYGROUND_BASE=/ npm run docs-build" \
+              --pre-deploy-command true \
+              --region eu \
+              --build-timeout 5 \
+              --build-memory-limit 2048 \
+              --no-wait
+          fi
+
+      - name: Deploy preview
+        if: github.event_name == 'pull_request'
+        run: deno run -A --no-config --node-modules-dir=auto jsr:@deno/deploy --config deno.json --org "$DENO_DEPLOY_ORG" --app "$DENO_DEPLOY_APP"
+
+      - name: Deploy production
+        if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
+        run: deno run -A --no-config --node-modules-dir=auto jsr:@deno/deploy --config deno.json --org "$DENO_DEPLOY_ORG" --app "$DENO_DEPLOY_APP" --prod
+
+      - name: Show application URL
+        run: deno run -A --no-config --node-modules-dir=auto jsr:@deno/deploy --config deno.json apps get --org "$DENO_DEPLOY_ORG" --app "$DENO_DEPLOY_APP"

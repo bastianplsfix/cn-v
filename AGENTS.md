@@ -25,7 +25,7 @@ cn-variants is a tiny, ESM-only TypeScript library with three runtime exports: `
 - `tests/types.ts`: compile-time rejection and inference checks.
 - `examples/basic.ts`: canonical consumer usage, compiled against the packed package by the smoke test.
 - `scripts/package-smoke.mjs`: validates the published tarball, ESM boundary, peer installation, and consumer TypeScript usage.
-- `apps/playground`: Vite+ / TanStack Router docs site and Button gallery (`@cn-variants/playground`). GitHub Pages serves this app at `/cn-variants`.
+- `apps/playground`: Vite+ / TanStack Router docs site and Button gallery (`@cn-variants/playground`). Deno Deploy serves this app at the domain root (`https://cn-variants.bs.deno.net`); `cn-variants.com` comes after DNS.
 - `packages/ui`: private Button example kit (`@cn-variants/ui`) that uses workspace `cn-variants` for tone and size.
 - `DESIGN.md`: rationale behind the deliberately small API.
 - `ROADMAP.md`: planned work and past decisions; consult before proposing API changes.
@@ -55,8 +55,12 @@ For documentation and playground changes, use the root task aliases:
 2. `vp run docs-build`
 
 Start the playground from the repository root with `vp run docs`. Check it
-with `vp run docs-status` and stop it with `vp run docs-stop`. The published
-library stays at the repo root; do not publish `apps/playground` or `packages/ui`.
+with `vp run docs-status` and stop it with `vp run docs-stop`. Local and
+production/preview builds use `PLAYGROUND_BASE=/`. Push or merge to `main`
+deploys production to Deno (`cn-variants.bs.deno.net`) via
+`.github/workflows/deno-deploy-web.yml`. Same-repo pull requests preview-deploy
+when `DENO_DEPLOY_TOKEN` is set. The published library stays at the repo root;
+do not publish `apps/playground` or `packages/ui`.
 
 <!--VITE PLUS START-->
 

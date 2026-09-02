@@ -6,9 +6,9 @@ cn-variants is ESM-only. Its runtime API has three named exports: cn, createCn, 
 
 ## Documentation
 
-- [API guide](https://bastianplsfix.github.io/cn-variants/): Installation, cn, createCn, variants, exported types, component composition, runtime behavior, design decisions, and Tailwind IntelliSense.
-- [Button playground](https://bastianplsfix.github.io/cn-variants/button): Live Button that uses cn-variants for tone and size.
-- [Full LLM reference](https://bastianplsfix.github.io/cn-variants/llms-full.txt): Plain-text API contract and canonical examples.
+- [API guide](https://cn-variants.bs.deno.net/): Installation, cn, createCn, variants, exported types, component composition, runtime behavior, design decisions, and Tailwind IntelliSense.
+- [Button playground](https://cn-variants.bs.deno.net/button): Live Button that uses cn-variants for tone and size.
+- [Full LLM reference](https://cn-variants.bs.deno.net/llms-full.txt): Plain-text API contract and canonical examples.
 
 ## Package and source
 

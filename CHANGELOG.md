@@ -14,6 +14,7 @@
 - Counted three runtime exports (`cn`, `variants`, `createCn`)
 - Dropped the outdated "4 lines" implementation claim
 - Distinguished CVA (`cva()`) from tailwind-variants (`tv()`)
+- Host the playground on Deno Deploy (`cn-variants.bs.deno.net`) instead of GitHub Pages; production and preview builds use `/` as the site base path. `cn-variants.com` comes after DNS.
 
 ## 3.0.0
 
