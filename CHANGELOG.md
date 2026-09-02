@@ -1,5 +1,20 @@
 # Changelog
 
+## Unreleased
+
+### Fixed
+
+- `variants()` copies and freezes array values in the `.options` snapshot. Mutating a source array after `variants()` no longer changes lookup or `.options`. Callers who relied on that aliasing will no longer see it.
+
+### Documentation
+
+- Documented empty-string keys in DESIGN.md and the docs runtime contract
+- Corrected `VariantOptions`: keys are variant names for one axis, not class names
+- Clarified tree-shaking: the `createCn` named export shakes when unused; `cn` uses the factory internally; `variants`-only still does not pull clsx or tailwind-merge
+- Counted three runtime exports (`cn`, `variants`, `createCn`)
+- Dropped the outdated "4 lines" implementation claim
+- Distinguished CVA (`cva()`) from tailwind-variants (`tv()`)
+
 ## 3.0.0
 
 ### Migration guide

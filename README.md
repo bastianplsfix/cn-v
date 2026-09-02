@@ -53,6 +53,10 @@ The API deliberately differs from CVA-style configuration objects:
 - Put a caller-provided `className` last in `cn()` when it should win Tailwind conflicts.
 - Import through the ESM package entry point; internal modules are not public exports.
 
+## When to use this
+
+Use cn-variants when you want the familiar `cn` merge plus a typed lookup for one axis at a time. If you already have shadcn's `cn`, you can keep that merger and still use `variants`. Reach for CVA (`cva()`) or tailwind-variants (`tv()`) when you want a multi-axis configuration object, default variants, `compoundVariants`, or slots. cn-variants does not add those features.
+
 ## `cn(...inputs)`
 
 Merges class names using clsx and tailwind-merge. Handles conditionals, duplicates, and Tailwind conflicts.
@@ -88,7 +92,7 @@ Creates a typed lookup function for Tailwind class variants. The map is captured
 ```ts
 import { cn, variants } from "cn-variants";
 
-const buttonVariant = variants({
+const buttonTone = variants({
   primary: "bg-indigo-600 text-white border-none",
   secondary: "bg-transparent text-indigo-600 border border-indigo-600",
   danger: "bg-red-600 text-white border-none",
@@ -104,13 +108,13 @@ const buttonSize = variants({
 The returned function accepts only the keys from the map:
 
 ```ts
-buttonVariant("primary");
+buttonTone("primary");
 // ✅ ok
 
-buttonVariant("ghost");
+buttonTone("ghost");
 // ❌ TypeScript error: expected "primary" | "secondary" | "danger"
 
-buttonVariant(undefined);
+buttonTone(undefined);
 // ✅ ok — returns ""
 ```
 
@@ -121,17 +125,17 @@ Use the `Variant` helper type when you need the union for component props:
 ```ts
 import { type Variant, variants } from "cn-variants";
 
-const buttonVariant = variants({
+const buttonTone = variants({
   primary: "bg-indigo-600 text-white border-none",
   secondary: "bg-transparent text-indigo-600 border border-indigo-600",
   danger: "bg-red-600 text-white border-none",
 });
 
-type ButtonVariant = Variant<typeof buttonVariant>;
+type ButtonTone = Variant<typeof buttonTone>;
 // → "primary" | "secondary" | "danger"
 ```
 
-The returned function also exposes a frozen `.options` snapshot, so `keyof typeof buttonVariant.options` still works if you prefer that style. Creating a variant does not freeze or retain the object passed by the caller. Only the snapshot map itself is frozen; array values inside it are not frozen, so treat them as read-only.
+The returned function also exposes a frozen `.options` snapshot, so `keyof typeof buttonTone.options` still works if you prefer that style. Creating a variant does not freeze or retain the object passed by the caller. The snapshot includes copied frozen arrays, so later mutation of the source does not change lookup or `.options`.
 
 Empty-string keys are allowed and behave like any other key — they are looked up with the same rules, so `variants({ "": "hidden" })("")` returns `"hidden"`.
 
@@ -155,16 +159,16 @@ The `VariantValue` type (`string | readonly string[]`) is exported too, in case 
 type ButtonSize = Variant<typeof buttonSize>;
 
 interface ButtonProps {
-  variant?: ButtonVariant;
+  tone?: ButtonTone;
   size?: ButtonSize;
   className?: string;
   children: React.ReactNode;
 }
 
-export function Button({ variant = "primary", size = "md", className, children }: ButtonProps) {
+export function Button({ tone = "primary", size = "md", className, children }: ButtonProps) {
   return (
     <button
-      className={cn("rounded-md font-medium", buttonVariant(variant), buttonSize(size), className)}
+      className={cn("rounded-md font-medium", buttonTone(tone), buttonSize(size), className)}
     >
       {children}
     </button>
@@ -175,7 +179,7 @@ export function Button({ variant = "primary", size = "md", className, children }
 Callers can override any style through `className` — tailwind-merge ensures the caller's classes win:
 
 ```tsx
-<Button variant="primary" className="bg-purple-600">
+<Button tone="primary" className="bg-purple-600">
   {/* bg-purple-600 overrides the primary variant's bg-indigo-600 */}
 </Button>
 ```
@@ -187,10 +191,10 @@ For styles that depend on a combination of variants, use conditionals in `cn`:
 ```tsx
 cn(
   "rounded-md font-medium",
-  buttonVariant(variant),
+  buttonTone(tone),
   buttonSize(size),
-  variant === "primary" && size === "lg" && "uppercase tracking-wide",
-  variant === "danger" && "ring-2 ring-red-300",
+  tone === "primary" && size === "lg" && "uppercase tracking-wide",
+  tone === "danger" && "ring-2 ring-red-300",
   className,
 );
 ```
@@ -274,12 +278,12 @@ That keeps matching rules, precedence, and debugging in userland where TypeScrip
 import { cn } from "cnfast";
 import { variants } from "cn-variants";
 
-const buttonVariant = variants({
+const buttonTone = variants({
   primary: "bg-indigo-600 text-white",
   secondary: "bg-transparent text-indigo-600",
 });
 
-cn("rounded-md font-medium", buttonVariant("primary"));
+cn("rounded-md font-medium", buttonTone("primary"));
 ```
 
 ## Custom Tailwind configurations
@@ -306,7 +310,7 @@ cn("text-primary", "text-secondary");
 
 `variants` returns plain strings, so it composes with any merge function unchanged. Wrapping the merger in `createCn` also gives you full clsx input support (`cn("base", { bold: true })`), just like the built-in `cn`.
 
-`createCn` lives in its own module, so it (and its dependencies) tree-shake away for anyone who only imports `cn` or `variants`. The `MergeClasses` type (`(classes: string) => string`) is exported too, so you can annotate mergers and wrapper functions directly:
+The named `createCn` export tree-shakes when unused. `cn` is implemented with that factory internally, so importing `cn` retains the factory code. Importing only `variants` still does not pull clsx or tailwind-merge into a bundler. The `MergeClasses` type (`(classes: string) => string`) is exported too, so you can annotate mergers and wrapper functions directly:
 
 ```ts
 import { type MergeClasses } from "cn-variants";
@@ -320,7 +324,7 @@ const merge: MergeClasses = (classes) => myCustomMerger(classes);
 
 ## Tree-shaking
 
-`cn` and `variants` are independent. If you only import `variants`, your bundler will tree-shake away `cn` and its dependencies (clsx, tailwind-merge), keeping your bundle minimal.
+`cn` and `variants` are independent modules. If you only import `variants`, your bundler will tree-shake away `cn`, `createCn`, and their dependencies (clsx, tailwind-merge), keeping your bundle minimal. The `createCn` named export also tree-shakes when unused; importing `cn` retains the factory because `cn` uses it internally.
 
 The package declares `"sideEffects": false` so bundlers can apply this optimization safely.
 

@@ -8,7 +8,7 @@ export type VariantOptions = Record<string, VariantValue>;
 export interface VariantFn<TOptions extends VariantOptions> {
   /** Returns the class string for a variant key, or `""` for `undefined` and unknown runtime keys. */
   (key: keyof TOptions | undefined): string;
-  /** Frozen snapshot of the variant map. */
+  /** Frozen snapshot of the variant map, including copied frozen arrays. */
   readonly options: Readonly<TOptions>;
 }
 
@@ -39,7 +39,8 @@ function toClassString(value: string | readonly string[]): string {
  * Creates a typed class lookup for one variant axis.
  *
  * Pass a key-to-class map. Values may be a class string or an array of class
- * strings, which are joined with spaces.
+ * strings, which are joined with spaces. Empty-string keys are allowed.
+ * `.options` is a frozen snapshot of the map, including copied frozen arrays.
  *
  * @example
  * ```ts
@@ -55,7 +56,14 @@ function toClassString(value: string | readonly string[]): string {
 export function variants<const TOptions extends VariantOptions>(
   map: TOptions,
 ): VariantFn<TOptions> {
-  const options = Object.freeze(Object.assign(Object.create(null), map));
+  const options = Object.assign(Object.create(null), map);
+  for (const key of Object.keys(options)) {
+    const value = options[key];
+    if (Array.isArray(value)) {
+      options[key] = Object.freeze(value.slice());
+    }
+  }
+  Object.freeze(options);
   return Object.assign(
     (key: keyof TOptions | undefined): string =>
       key !== undefined && Object.hasOwn(options, key) ? toClassString(options[key]) : "",

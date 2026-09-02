@@ -130,8 +130,10 @@ const editorConfig = `{
         <p>
           Projects with custom Tailwind utilities—design tokens like <code>bg-primary</code> or
           plugin classes—can wire a configured tailwind-merge into a <code>cn</code>-style function.
-          The default <code>cn</code> stays zero-config, and <code>createCn</code> lives in its own
-          module so it tree-shakes away unless imported.
+          The default <code>cn</code> stays zero-config. The named <code>createCn</code> export
+          tree-shakes when unused; <code>cn</code> uses that factory internally, so importing{" "}
+          <code>cn</code> retains the factory code. Importing only <code>variants</code> still does
+          not pull clsx or tailwind-merge in a bundler.
         </p>
         <CodeBlock code={createCnExample} label="cn.ts" />
       </section>
@@ -171,7 +173,15 @@ const editorConfig = `{
           <li>Known keys return their class string unchanged; array values are joined with spaces.</li>
           <li>Unknown or inherited keys return an empty string when static types are bypassed.</li>
           <li><code>undefined</code> is accepted for optional props and returns an empty string.</li>
-          <li>The source map is copied when <code>variants()</code> is called; only the snapshot map itself is frozen.</li>
+          <li>
+            Empty-string keys are allowed and behave like any other key, so{" "}
+            <code>{`variants({ "": "hidden" })("")`}</code> returns <code>"hidden"</code>.
+          </li>
+          <li>
+            The source map is copied when <code>variants()</code> is called. Array values are copied
+            and frozen, so later mutation of the source does not change lookup or{" "}
+            <code>.options</code>.
+          </li>
         </ul>
         <p>
           Invalid keys are styling errors rather than render failures, so the runtime fallback is
@@ -200,7 +210,7 @@ const editorConfig = `{
             </tr>
             <tr>
               <td><code>VariantOptions</code></td>
-              <td>Describe a variant map keyed by class name.</td>
+              <td>Maps allowed keys for one variant axis to their classes.</td>
             </tr>
             <tr>
               <td><code>VariantValue</code></td>
@@ -279,9 +289,9 @@ const editorConfig = `{
           <li>
             <h3>Options are a snapshot</h3>
             <p>
-              The exposed <code>.options</code> object is frozen and detached from the caller's
-              map. It supports inspection and type extraction without taking ownership of user
-              data.
+              The exposed <code>.options</code> object is a frozen snapshot of the caller's map,
+              including copied frozen arrays. It supports inspection and type extraction without
+              taking ownership of user data.
             </p>
           </li>
           <li>
