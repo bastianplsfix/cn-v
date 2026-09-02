@@ -1,5 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import type { ReactNode } from "react";
+import { CodePanel } from "./gallery";
 
 const samples = {
   install: `npm install cn-variants`,
@@ -106,17 +107,6 @@ function card(...classes: ClassValue[]) {
 }`,
 };
 
-function Code({ children, label }: { children: string; label?: string }) {
-  return (
-    <figure>
-      {label ? <figcaption className="mb-2 text-xs text-ink-3">{label}</figcaption> : null}
-      <pre>
-        <code>{children}</code>
-      </pre>
-    </figure>
-  );
-}
-
 const toc = [
   { href: "#install", label: "Install" },
   { href: "#when", label: "When to use this" },
@@ -133,39 +123,39 @@ const toc = [
 
 export function DocsContent() {
   return (
-    <article className="typography">
-      <p className="lead">
+    <>
+      <p className="text-[15px] leading-snug text-ink-2">
         Three runtime exports for Tailwind class names: <code>cn</code> merges classes and resolves
         conflicts, <code>variants</code> is a typed lookup for one variant axis, and{" "}
         <code>createCn</code> builds a custom <code>cn</code>. That is the whole API.
       </p>
 
-      <nav aria-label="On this page">
-        <p>
-          <strong>On this page</strong>
-        </p>
-        <ol>
+      <nav aria-label="On this page" className="flex flex-col gap-3">
+        <h2 className="text-[15px] leading-snug text-ink-3">On this page</h2>
+        <ol className="flex flex-col gap-1.5">
           {toc.map((item) => (
             <li key={item.href}>
-              <a href={item.href}>{item.label}</a>
+              <a href={item.href} className="text-[15px] leading-snug text-ink-2 hover:text-ink">
+                {item.label}
+              </a>
             </li>
           ))}
         </ol>
       </nav>
 
-      <section id="install">
-        <h2>Install</h2>
-        <Code label="Terminal">{samples.install}</Code>
-        <p>
+      <section id="install" className="flex flex-col gap-3">
+        <h2 className="text-[15px] leading-snug text-ink-3">Install</h2>
+        <CodePanel code={samples.install} label="Terminal" />
+        <p className="text-[15px] leading-snug text-ink-2">
           cn-variants is ESM-only. Use named <code>import</code> statements or dynamic{" "}
           <code>import()</code>. CommonJS <code>require()</code> is not supported. npm 7+ installs
           the <code>clsx</code> and <code>tailwind-merge</code> peer dependencies automatically.
         </p>
       </section>
 
-      <section id="when">
-        <h2>When to use this</h2>
-        <p>
+      <section id="when" className="flex flex-col gap-3">
+        <h2 className="text-[15px] leading-snug text-ink-3">When to use this</h2>
+        <p className="text-[15px] leading-snug text-ink-2">
           Use cn-variants when you want the familiar <code>cn</code> merge plus a typed lookup for
           one axis at a time. If you already have shadcn&apos;s <code>cn</code>, keep that merger
           and still use <code>variants</code> — it returns plain strings. Reach for CVA (
@@ -173,9 +163,11 @@ export function DocsContent() {
           configuration object, default variants, <code>compoundVariants</code>, or slots.
           cn-variants does not add those features.
         </p>
-        <Code label="button.ts">{samples.glance}</Code>
-        <p>The API deliberately differs from CVA-style configuration objects:</p>
-        <ul>
+        <CodePanel code={samples.glance} label="button.ts" />
+        <p className="text-[15px] leading-snug text-ink-2">
+          The API deliberately differs from CVA-style configuration objects:
+        </p>
+        <ul className="list-disc space-y-2 pl-5 text-[15px] leading-snug text-ink-2">
           <li>
             Pass a direct key-to-class map to <code>{`variants({ primary: "..." })`}</code>.
           </li>
@@ -196,24 +188,24 @@ export function DocsContent() {
         </ul>
       </section>
 
-      <section id="cn">
-        <h2>
+      <section id="cn" className="flex flex-col gap-3">
+        <h2 className="text-[15px] leading-snug text-ink-3">
           <code>cn(...inputs)</code>
         </h2>
-        <p>
+        <p className="text-[15px] leading-snug text-ink-2">
           <code>cn</code> first combines any value accepted by clsx, then resolves conflicting
           Tailwind utilities with tailwind-merge. Later conflicting utilities win. Put a
           caller-provided <code>className</code> last when consumers should override component
           defaults.
         </p>
-        <Code label="classes.ts">{samples.cn}</Code>
+        <CodePanel code={samples.cn} label="classes.ts" />
       </section>
 
-      <section id="createcn">
-        <h2>
+      <section id="createcn" className="flex flex-col gap-3">
+        <h2 className="text-[15px] leading-snug text-ink-3">
           <code>createCn(mergeClasses)</code>
         </h2>
-        <p>
+        <p className="text-[15px] leading-snug text-ink-2">
           Projects with custom Tailwind utilities — design tokens like <code>bg-primary</code> or
           plugin classes — can wire a configured tailwind-merge into a <code>cn</code>-style
           function. The default <code>cn</code> stays zero-config. The named <code>createCn</code>{" "}
@@ -221,20 +213,20 @@ export function DocsContent() {
           <code>cn</code> retains the factory code. Importing only <code>variants</code> still does
           not pull clsx or tailwind-merge in a bundler.
         </p>
-        <Code label="cn.ts">{samples.createCn}</Code>
+        <CodePanel code={samples.createCn} label="cn.ts" />
       </section>
 
-      <section id="variants">
-        <h2>
+      <section id="variants" className="flex flex-col gap-3">
+        <h2 className="text-[15px] leading-snug text-ink-3">
           <code>variants(map)</code>
         </h2>
-        <p>
+        <p className="text-[15px] leading-snug text-ink-2">
           <code>variants</code> creates a lookup function for one variant axis. The map goes
           directly into the function — there is no nested configuration object. Values can be a
           class string or an array of class strings, joined with spaces.
         </p>
-        <Code label="variants.ts">{samples.variants}</Code>
-        <p>
+        <CodePanel code={samples.variants} label="variants.ts" />
+        <p className="text-[15px] leading-snug text-ink-2">
           Call <code>buttonTone(&quot;primary&quot;)</code>, not{" "}
           <code>{`buttonTone({ tone: "primary" })`}</code>. Use a separate function for each axis.{" "}
           <code>Variant&lt;typeof buttonTone&gt;</code> is the preferred way to derive component
@@ -242,42 +234,48 @@ export function DocsContent() {
         </p>
       </section>
 
-      <section id="components">
-        <h2>Composing components</h2>
-        <p>
+      <section id="components" className="flex flex-col gap-3">
+        <h2 className="text-[15px] leading-snug text-ink-3">Composing components</h2>
+        <p className="text-[15px] leading-snug text-ink-2">
           Defaults stay with component props. Compound styles stay as boolean expressions inside{" "}
           <code>cn</code>. That keeps control flow visible to TypeScript and your editor.
         </p>
-        <Code label="button.ts">{samples.component}</Code>
+        <CodePanel code={samples.component} label="button.ts" />
       </section>
 
-      <section id="button">
-        <h2>Button example</h2>
-        <p>
-          <Link to="/button">Open the Button playground</Link> to see a live{" "}
-          <code>@cn-variants/ui</code> Button. It uses one <code>variants()</code> call per axis (
-          <code>buttonTone</code>, <code>buttonSize</code>), composes them with <code>cn</code>, and
-          puts <code>className</code> last so callers can override Tailwind utilities.
+      <section id="button" className="flex flex-col gap-3">
+        <h2 className="text-[15px] leading-snug text-ink-3">Button example</h2>
+        <p className="text-[15px] leading-snug text-ink-2">
+          <Link
+            to="/button"
+            className="text-ink underline decoration-line-subtle underline-offset-2 hover:decoration-ink"
+          >
+            Open the Button playground
+          </Link>{" "}
+          to see a live <code>@cn-variants/ui</code> Button. It uses one <code>variants()</code>{" "}
+          call per axis (<code>buttonTone</code>, <code>buttonSize</code>), composes them with{" "}
+          <code>cn</code>, and puts <code>className</code> last so callers can override Tailwind
+          utilities.
         </p>
       </section>
 
-      <section id="intellisense">
-        <h2>Tailwind IntelliSense</h2>
-        <p>
+      <section id="intellisense" className="flex flex-col gap-3">
+        <h2 className="text-[15px] leading-snug text-ink-3">Tailwind IntelliSense</h2>
+        <p className="text-[15px] leading-snug text-ink-2">
           Register both function names with the Tailwind CSS language server to enable class
           completion inside calls and variant maps. <code>classFunctions</code> configures the
           editor&apos;s language server; it is not a <code>tailwind.config.js</code> property.
         </p>
-        <Code label=".vscode/settings.json">{samples.intellisense}</Code>
-        <p>
+        <CodePanel code={samples.intellisense} label=".vscode/settings.json" />
+        <p className="text-[15px] leading-snug text-ink-2">
           The same <code>classFunctions</code> setting can be passed through Zed and JetBrains
           Tailwind language-server configuration.
         </p>
       </section>
 
-      <section id="runtime">
-        <h2>Runtime behavior</h2>
-        <ul>
+      <section id="runtime" className="flex flex-col gap-3">
+        <h2 className="text-[15px] leading-snug text-ink-3">Runtime behavior</h2>
+        <ul className="list-disc space-y-2 pl-5 text-[15px] leading-snug text-ink-2">
           <li>
             Known keys return their class string unchanged; array values are joined with spaces.
           </li>
@@ -295,19 +293,23 @@ export function DocsContent() {
             <code>.options</code>.
           </li>
         </ul>
-        <p>
+        <p className="text-[15px] leading-snug text-ink-2">
           Invalid keys are styling errors rather than render failures, so the runtime fallback is
           intentionally non-throwing.
         </p>
       </section>
 
-      <section id="types">
-        <h2>Exported types</h2>
-        <table>
+      <section id="types" className="flex flex-col gap-3">
+        <h2 className="text-[15px] leading-snug text-ink-3">Exported types</h2>
+        <table className="w-full table-auto border-collapse text-left align-top">
           <thead>
             <tr>
-              <th>Type</th>
-              <th>Purpose</th>
+              <th className="border-b border-line pb-2 pr-3 text-xs leading-none font-normal text-ink-3">
+                Type
+              </th>
+              <th className="border-b border-line pb-2 text-xs leading-none font-normal text-ink-3">
+                Purpose
+              </th>
             </tr>
           </thead>
           <tbody>
@@ -334,85 +336,69 @@ export function DocsContent() {
             </TypeRow>
           </tbody>
         </table>
-        <Code label="card.ts">{samples.wrapper}</Code>
+        <CodePanel code={samples.wrapper} label="card.ts" />
       </section>
 
-      <section id="design">
-        <h2>Design decisions</h2>
-        <p>Why the API is the size it is:</p>
-        <ol>
-          <li>
-            <h3>A function, not a configuration system</h3>
-            <p>
-              A lookup function narrows its argument to known keys, works with Tailwind
-              IntelliSense, and returns the plain string every class-merging utility already
-              understands.
-            </p>
-          </li>
-          <li>
-            <h3>One axis at a time</h3>
-            <p>
-              Tone, size, and state stay as separate functions. Components decide how to combine
-              them, so there is no named-argument convention or hidden precedence model to learn.
-            </p>
-          </li>
-          <li>
-            <h3>Defaults belong to components</h3>
-            <p>
-              Prop destructuring already expresses defaults at the boundary where they matter.
-              Moving them into a variant definition would create a second source of truth.
-            </p>
-          </li>
-          <li>
-            <h3>Compound styles are conditions</h3>
-            <p>
-              JavaScript can already say “primary and large.” Keeping the expression in{" "}
-              <code>cn()</code> gives TypeScript, refactors, and debuggers the full picture.
-            </p>
-          </li>
-          <li>
-            <h3>Invalid runtime keys fail soft</h3>
-            <p>
-              TypeScript rejects invalid keys during development. If types are bypassed, an empty
-              class string is safer than crashing a render over a styling concern.
-            </p>
-          </li>
-          <li>
-            <h3>Options are a snapshot</h3>
-            <p>
-              The exposed <code>.options</code> object is a frozen snapshot of the caller&apos;s
-              map, including copied frozen arrays. It supports inspection and type extraction
-              without taking ownership of user data.
-            </p>
-          </li>
-          <li>
-            <h3>Dependencies stay peer dependencies</h3>
-            <p>
-              clsx and tailwind-merge are peers so consumers control the versions they use and
-              bundlers see exactly one copy of each.
-            </p>
-          </li>
-          <li>
-            <h3>Unused code should disappear</h3>
-            <p>
-              <code>cn</code>, <code>createCn</code>, and <code>variants</code> live in separate
-              modules and the package is marked side-effect free. Importing only the typed lookup
-              does not need to retain the class merger.
-            </p>
-          </li>
+      <section id="design" className="flex flex-col gap-3">
+        <h2 className="text-[15px] leading-snug text-ink-3">Design decisions</h2>
+        <p className="text-[15px] leading-snug text-ink-2">Why the API is the size it is:</p>
+        <ol className="flex list-decimal flex-col gap-6 pl-5">
+          <Decision title="A function, not a configuration system">
+            A lookup function narrows its argument to known keys, works with Tailwind IntelliSense,
+            and returns the plain string every class-merging utility already understands.
+          </Decision>
+          <Decision title="One axis at a time">
+            Tone, size, and state stay as separate functions. Components decide how to combine them,
+            so there is no named-argument convention or hidden precedence model to learn.
+          </Decision>
+          <Decision title="Defaults belong to components">
+            Prop destructuring already expresses defaults at the boundary where they matter. Moving
+            them into a variant definition would create a second source of truth.
+          </Decision>
+          <Decision title="Compound styles are conditions">
+            JavaScript can already say “primary and large.” Keeping the expression in{" "}
+            <code>cn()</code> gives TypeScript, refactors, and debuggers the full picture.
+          </Decision>
+          <Decision title="Invalid runtime keys fail soft">
+            TypeScript rejects invalid keys during development. If types are bypassed, an empty class
+            string is safer than crashing a render over a styling concern.
+          </Decision>
+          <Decision title="Options are a snapshot">
+            The exposed <code>.options</code> object is a frozen snapshot of the caller&apos;s map,
+            including copied frozen arrays. It supports inspection and type extraction without taking
+            ownership of user data.
+          </Decision>
+          <Decision title="Dependencies stay peer dependencies">
+            clsx and tailwind-merge are peers so consumers control the versions they use and bundlers
+            see exactly one copy of each.
+          </Decision>
+          <Decision title="Unused code should disappear">
+            <code>cn</code>, <code>createCn</code>, and <code>variants</code> live in separate
+            modules and the package is marked side-effect free. Importing only the typed lookup does
+            not need to retain the class merger.
+          </Decision>
         </ol>
       </section>
-    </article>
+    </>
   );
 }
 
 function TypeRow({ name, children }: { name: string; children: ReactNode }) {
   return (
-    <tr>
-      <td>
-        <code>{name}</code>
+    <tr className="border-b border-line-subtle last:border-b-0">
+      <td className="py-2 pr-3 align-top">
+        <code className="font-mono text-xs leading-none text-ink">{name}</code>
       </td>
-      <td>{children}</td>
+      <td className="py-2 align-top text-[15px] leading-snug text-ink-2">{children}</td>
     </tr>
+  );
+}
+
+function Decision({ title, children }: { title: string; children: ReactNode }) {
+  return (
+    <li className="flex flex-col gap-2 pl-1 text-[15px] leading-snug text-ink-2">
+      <h3 className="text-[15px] leading-snug text-ink">{title}</h3>
+      <p>{children}</p>
+    </li>
   );
 }

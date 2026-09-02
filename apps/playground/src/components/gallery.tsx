@@ -20,7 +20,7 @@ export function GalleryPage({
 }) {
   if (preview === undefined) {
     return (
-      <div className="h-full overflow-y-auto px-8 py-6">
+      <div className="h-full overflow-y-auto px-5 py-6">
         <section className="max-w-3xl">
           <header className="flex flex-col gap-1.5">
             <h1 className="text-lg leading-snug font-normal">{title}</h1>
@@ -87,12 +87,22 @@ export function GalleryPage({
   );
 }
 
-function UsagePanel({ code, className }: { code: string; className?: string }) {
+export function CodePanel({
+  code,
+  label,
+  className,
+}: {
+  code: string;
+  label?: string;
+  className?: string;
+}) {
   return (
     <div className={cn("overflow-hidden rounded-none border border-line-subtle", className)}>
-      <div className="border-b border-line-subtle px-3 py-1.5 text-xs leading-none text-ink-3">
-        Usage
-      </div>
+      {label ? (
+        <div className="border-b border-line-subtle px-3 py-1.5 text-xs leading-none text-ink-3">
+          {label}
+        </div>
+      ) : null}
       <ScrollArea.Root className="bg-surface-2">
         <ScrollArea.Viewport className="border-none overscroll-x-contain overscroll-y-auto">
           <pre className="w-max min-w-full p-3 font-mono text-xs leading-relaxed text-ink">
@@ -105,4 +115,8 @@ function UsagePanel({ code, className }: { code: string; className?: string }) {
       </ScrollArea.Root>
     </div>
   );
+}
+
+function UsagePanel({ code, className }: { code: string; className?: string }) {
+  return <CodePanel code={code} label="Usage" className={className} />;
 }
