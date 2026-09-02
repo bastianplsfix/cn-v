@@ -16,6 +16,20 @@ body,
   height: 100%;
 }
 
+html {
+  color-scheme: light;
+}
+
+html[data-theme="dark"] {
+  color-scheme: dark;
+}
+
+@media (prefers-color-scheme: dark) {
+  html:not([data-theme="light"]) {
+    color-scheme: dark;
+  }
+}
+
 :root {
   --ds-bg: #ffffff;
   --ds-bg-2: #f8f8f8;

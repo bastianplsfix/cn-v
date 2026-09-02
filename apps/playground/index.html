@@ -12,7 +12,10 @@
     <script>
       (function () {
         var t = localStorage.getItem("theme");
-        if (t === "dark" || t === "light") document.documentElement.setAttribute("data-theme", t);
+        if (t === "dark" || t === "light") {
+          document.documentElement.setAttribute("data-theme", t);
+          document.documentElement.style.colorScheme = t;
+        }
       })();
     </script>
   </head>
