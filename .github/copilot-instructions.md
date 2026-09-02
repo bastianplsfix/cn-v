@@ -7,5 +7,5 @@ Follow the complete project guidance in `/AGENTS.md` and read `/DESIGN.md` befor
 - Keep defaults and compound variants in userland JavaScript; do not introduce a CVA-style configuration DSL.
 - Use Vite+ (`vp`) for installing, checking, testing, packing, and invoking project tools.
 - Keep public TSDoc, README examples, tests, and `examples/basic.ts` synchronized with behavior.
-- Keep the Astro site minimal, static, accessible, and free of client-side JavaScript unless an interaction genuinely requires it.
+- Keep the playground small: docs plus a Button example that uses `cn` and `variants`. Do not publish `apps/playground` or `packages/ui`.
 - Validate changes with the full command sequence documented in `/AGENTS.md`.

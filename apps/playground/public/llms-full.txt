@@ -1,4 +1,4 @@
-const body = `# cn-variants API reference
+# cn-variants API reference
 
 cn-variants is an ESM-only TypeScript package for composing Tailwind CSS class names. Import only from "cn-variants".
 
@@ -95,14 +95,3 @@ function buttonClasses({ tone = "primary", size = "md", className }: ButtonProps
 ## Non-features
 
 cn-variants does not implement default variants, compound-variant configuration, slots, responsive variants, or a CVA-style nested configuration object. Express those requirements in the consuming component or choose a more opinionated variant library.
-`;
-
-export const prerender = true;
-
-export function GET() {
-  return new Response(body, {
-    headers: {
-      "Content-Type": "text/plain; charset=utf-8",
-    },
-  });
-}

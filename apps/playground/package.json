@@ -1,0 +1,31 @@
+{
+  "name": "@cn-variants/playground",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vp dev",
+    "build": "vp build && cp dist/index.html dist/404.html",
+    "preview": "vp preview",
+    "check": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@base-ui/react": "^1.7.0",
+    "@cn-variants/ui": "*",
+    "@tanstack/react-router": "^1.170.27",
+    "clsx": "^2.1.1",
+    "cn-variants": "*",
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8",
+    "tailwind-merge": "^3.5.0"
+  },
+  "devDependencies": {
+    "@tailwindcss/vite": "^4.3.3",
+    "@tanstack/router-plugin": "^1.168.30",
+    "@types/react": "^19.2.18",
+    "@types/react-dom": "^19.2.4",
+    "@vitejs/plugin-react": "^5.2.0",
+    "tailwindcss": "^4.3.3",
+    "typescript": "^5.9.3"
+  }
+}

@@ -1,0 +1,90 @@
+@import "tailwindcss";
+@import "@cn-variants/ui/styles.css";
+
+@source "../../../packages/ui/src/**/*.{ts,tsx}";
+@source "./**/*.{ts,tsx}";
+
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
+
+.knob-label {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+
+html,
+body,
+#app {
+  height: 100%;
+}
+
+html {
+  color-scheme: light;
+}
+
+html[data-theme="dark"] {
+  color-scheme: dark;
+}
+
+@media (prefers-color-scheme: dark) {
+  html:not([data-theme="light"]) {
+    color-scheme: dark;
+  }
+}
+
+:root {
+  --ds-bg: #ffffff;
+  --ds-bg-2: #f8f8f8;
+  --ds-br-subtle: #eeeeee;
+  --ds-br: #e5e5e5;
+  --ds-br-strong: #dbdbdb;
+  --ds-fg: #1d1d1d;
+  --ds-fg-2: #454545;
+  --ds-fg-3: #9b9b9b;
+}
+
+[data-theme="dark"] {
+  --ds-bg: #1d1d1d;
+  --ds-bg-2: #272727;
+  --ds-br-subtle: #272727;
+  --ds-br: #363636;
+  --ds-br-strong: #454545;
+  --ds-fg: #ffffff;
+  --ds-fg-2: #dbdbdb;
+  --ds-fg-3: #9b9b9b;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --ds-bg: #1d1d1d;
+    --ds-bg-2: #272727;
+    --ds-br-subtle: #272727;
+    --ds-br: #363636;
+    --ds-br-strong: #454545;
+    --ds-fg: #ffffff;
+    --ds-fg-2: #dbdbdb;
+    --ds-fg-3: #9b9b9b;
+  }
+}
+
+@theme inline {
+  --color-surface: var(--ds-bg);
+  --color-surface-2: var(--ds-bg-2);
+  --color-line-subtle: var(--ds-br-subtle);
+  --color-line: var(--ds-br);
+  --color-line-strong: var(--ds-br-strong);
+  --color-ink: var(--ds-fg);
+  --color-ink-2: var(--ds-fg-2);
+  --color-ink-3: var(--ds-fg-3);
+}
+
+body {
+  background-color: var(--ds-bg);
+  color: var(--ds-fg);
+  font-feature-settings: "calt" 0;
+  overflow: hidden;
+}
+
+code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 12px;
+  color: var(--ds-fg);
+}

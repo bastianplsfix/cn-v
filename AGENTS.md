@@ -25,7 +25,8 @@ cn-variants is a tiny, ESM-only TypeScript library with three runtime exports: `
 - `tests/types.ts`: compile-time rejection and inference checks.
 - `examples/basic.ts`: canonical consumer usage, compiled against the packed package by the smoke test.
 - `scripts/package-smoke.mjs`: validates the published tarball, ESM boundary, peer installation, and consumer TypeScript usage.
-- `docs/`: independent Astro 7 documentation site; it requires Node.js 22.12 or newer and has its own lockfile.
+- `apps/playground`: Vite+ / TanStack Router docs site and Button gallery (`@cn-variants/playground`). GitHub Pages serves this app at `/cn-variants`.
+- `packages/ui`: private Button example kit (`@cn-variants/ui`) that uses workspace `cn-variants` for tone and size.
 - `DESIGN.md`: rationale behind the deliberately small API.
 - `ROADMAP.md`: planned work and past decisions; consult before proposing API changes.
 - `CONTRIBUTING.md`: human-facing contribution guide and validation steps.
@@ -48,14 +49,14 @@ After `vp install`, run:
 4. `vp run check:package`
 5. `vp run test:package`
 
-For documentation changes, use the root task aliases:
+For documentation and playground changes, use the root task aliases:
 
-1. `vp run docs-install`
-2. `vp run docs-check`
-3. `vp run docs-build`
+1. `vp run docs-check`
+2. `vp run docs-build`
 
-Start the documentation development server from the repository root with `vp run docs`. Check it
-with `vp run docs-status` and stop it with `vp run docs-stop`.
+Start the playground from the repository root with `vp run docs`. Check it
+with `vp run docs-status` and stop it with `vp run docs-stop`. The published
+library stays at the repo root; do not publish `apps/playground` or `packages/ui`.
 
 <!--VITE PLUS START-->
 

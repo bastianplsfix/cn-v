@@ -20,6 +20,10 @@
     "type": "git",
     "url": "git+https://github.com/bastianplsfix/cn-variants.git"
   },
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
   "files": [
     "dist"
   ],
@@ -36,13 +40,13 @@
   "scripts": {
     "build": "vp pack",
     "dev": "vp pack --watch",
-    "docs-install": "cd docs && vp install --frozen-lockfile --ignore-scripts",
-    "docs": "cd docs && vp exec astro dev",
-    "docs-stop": "cd docs && vp exec astro dev stop",
-    "docs-status": "cd docs && vp exec astro dev status",
-    "docs-check": "cd docs && vp exec astro check",
-    "docs-build": "cd docs && vp exec astro build",
-    "docs-preview": "cd docs && vp exec astro preview",
+    "docs-install": "vp install",
+    "docs": "vp run @cn-variants/playground#dev",
+    "docs-stop": "vp run @cn-variants/playground#dev stop",
+    "docs-status": "vp run @cn-variants/playground#dev status",
+    "docs-check": "vp run @cn-variants/playground#check && vp run @cn-variants/ui#check",
+    "docs-build": "vp run @cn-variants/playground#build",
+    "docs-preview": "vp run @cn-variants/playground#preview",
     "test": "vp test run",
     "test:package": "node scripts/package-smoke.mjs",
     "typecheck": "vp exec tsc --noEmit",
