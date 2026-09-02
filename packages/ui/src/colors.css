@@ -1,0 +1,30 @@
+@theme {
+  /* ===== Shared semantic colors ===== */
+  --color-green: light-dark(#069061, #00b648);
+  --color-red: light-dark(#ef0006, #dc1b19);
+  --color-yellow: light-dark(#edbe20, #ffc90d);
+  --color-blue: light-dark(#0082d0, #4eb3ec);
+  --color-orange: light-dark(#ff5800, #ff8d4d);
+  --color-purple: light-dark(#5203d1, #b191f9);
+  --color-accent: light-dark(#0099ff, #00aeff);
+
+  /* ===== Backgrounds ===== */
+  --color-bg-1: light-dark(#fbfcfc, #141414);
+  --color-bg-2: light-dark(#f1f2f1, #202020);
+  --color-bg-3: light-dark(#e2e3e3, #353437);
+  --color-bg-accent: light-dark(#8ab4f81f, #3ea6ff1f);
+
+  /* ===== Text / Foreground ===== */
+  --color-foreground-1: light-dark(#1b1b1b, #e7e7e7);
+  --color-foreground-2: light-dark(#88888c, #94949b);
+  --color-foreground-3: light-dark(#c1c2c7, #555558);
+
+  /* ===== Border & Icon ===== */
+  --color-border: light-dark(#dfdfdf, #2d2d2d);
+  --color-icon: light-dark(#7f7f7f, #929292);
+
+  /* ===== Buttons ===== */
+  --color-button: light-dark(rgba(0, 0, 0, 1), rgba(255, 255, 255, 1));
+  --color-button-hover: light-dark(rgba(0, 0, 0, 0.8), rgba(255, 255, 255, 0.9));
+  --color-button-text: light-dark(#ffffff, #000000);
+}

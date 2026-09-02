@@ -4,14 +4,16 @@ on:
   push:
     branches: [main]
     paths:
-      - "docs/**"
+      - "apps/playground/**"
+      - "packages/ui/**"
       - "src/**"
       - "README.md"
       - ".github/workflows/docs.yml"
   pull_request:
     branches: [main]
     paths:
-      - "docs/**"
+      - "apps/playground/**"
+      - "packages/ui/**"
       - "src/**"
       - "README.md"
       - ".github/workflows/docs.yml"
@@ -34,23 +36,20 @@ jobs:
         with:
           version: 0.2.5
           node-version: 24
-          working-directory: docs
-          run-install: false
           cache: true
 
       - run: vp install --frozen-lockfile --ignore-scripts
-        working-directory: docs
 
-      - run: vp run check
-        working-directory: docs
+      - run: vp run docs-check
 
-      - run: vp run build
-        working-directory: docs
+      - run: vp run docs-build
+        env:
+          PLAYGROUND_BASE: /cn-variants/
 
       - if: github.event_name != 'pull_request'
         uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0
         with:
-          path: docs/dist
+          path: apps/playground/dist
 
   deploy:
     if: github.event_name != 'pull_request'

@@ -1,0 +1,339 @@
+@layer components {
+  .typography {
+    /* ---- Color hooks (from colors.css; light-dark follows color-scheme) ---- */
+    --typography-body: var(--color-foreground-1);
+    --typography-headings: var(--color-foreground-1);
+    --typography-lead: var(--color-foreground-2);
+    --typography-links: var(--color-foreground-1);
+    --typography-bold: var(--color-foreground-1);
+    --typography-counters: var(--color-foreground-2);
+    --typography-bullets: var(--color-foreground-3);
+    --typography-rules: var(--color-border);
+    --typography-quote: var(--color-foreground-1);
+    --typography-quote-border: var(--color-border);
+    --typography-captions: var(--color-foreground-2);
+    --typography-kbd: var(--color-foreground-1);
+    --typography-kbd-border: var(--color-border);
+    --typography-code: var(--color-foreground-1);
+    --typography-code-bg: var(--color-bg-2);
+    --typography-pre-code: var(--color-bg-1);
+    --typography-pre-bg: var(--color-foreground-1);
+    --typography-th-border: var(--color-border);
+    --typography-td-border: var(--color-border);
+
+    /* ---- Body ---- */
+    color: var(--typography-body);
+    font-size: var(--text-base);
+    line-height: 1.75; /* prose rhythm; deliberately looser than --leading-relaxed */
+    max-width: 65ch;
+
+    /* ---- Flow spacing ---- */
+    & p {
+      margin-block: calc(var(--spacing) * 5);
+    }
+
+    & .lead {
+      color: var(--typography-lead);
+      font-size: var(--text-xl);
+      line-height: var(--text-xl--line-height);
+      margin-block: calc(var(--spacing) * 6);
+    }
+
+    /* ---- Inline elements ---- */
+    & a {
+      color: var(--typography-links);
+      font-weight: var(--font-weight-medium);
+      text-decoration: underline;
+      text-underline-offset: 2px;
+      text-decoration-color: var(--typography-rules);
+      transition: text-decoration-color 150ms ease;
+
+      &:hover {
+        text-decoration-color: currentColor;
+      }
+    }
+
+    & strong {
+      color: var(--typography-bold);
+      font-weight: var(--font-weight-semibold);
+    }
+
+    & em {
+      font-style: italic;
+    }
+
+    & small {
+      font-size: var(--text-sm);
+      line-height: var(--text-sm--line-height);
+    }
+
+    & kbd {
+      color: var(--typography-kbd);
+      font-family: var(--font-mono);
+      font-size: 0.875em;
+      font-weight: var(--font-weight-medium);
+      border: 1px solid var(--typography-kbd-border);
+      border-bottom-width: 2px;
+      border-radius: var(--radius-sm);
+      padding: calc(var(--spacing) * 0.5) calc(var(--spacing) * 1.5);
+    }
+
+    /* ---- Headings ---- */
+    & h1 {
+      color: var(--typography-headings);
+      font-size: var(--text-4xl);
+      line-height: var(--text-4xl--line-height);
+      font-weight: var(--font-weight-extrabold);
+      letter-spacing: var(--tracking-tight);
+      margin-block: 0 calc(var(--spacing) * 8);
+    }
+
+    & h2 {
+      color: var(--typography-headings);
+      font-size: var(--text-2xl);
+      line-height: var(--text-2xl--line-height);
+      font-weight: var(--font-weight-bold);
+      letter-spacing: var(--tracking-tight);
+      margin-block: calc(var(--spacing) * 12) calc(var(--spacing) * 6);
+    }
+
+    & h3 {
+      color: var(--typography-headings);
+      font-size: var(--text-xl);
+      line-height: var(--text-xl--line-height);
+      font-weight: var(--font-weight-semibold);
+      margin-block: calc(var(--spacing) * 8) calc(var(--spacing) * 3);
+    }
+
+    & h4 {
+      color: var(--typography-headings);
+      font-size: var(--text-base);
+      line-height: var(--text-base--line-height);
+      font-weight: var(--font-weight-semibold);
+      margin-block: calc(var(--spacing) * 6) calc(var(--spacing) * 2);
+    }
+
+    /* Collapse the gap when content sits directly under a heading or rule */
+    & h2 + *,
+    & h3 + *,
+    & h4 + *,
+    & hr + * {
+      margin-block-start: 0;
+    }
+
+    /* ---- Lists ---- */
+    & ul,
+    & ol {
+      margin-block: calc(var(--spacing) * 5);
+      padding-inline-start: calc(var(--spacing) * 6.5);
+    }
+
+    & ul {
+      list-style-type: disc;
+    }
+
+    & ol {
+      list-style-type: decimal;
+    }
+
+    & li {
+      margin-block: calc(var(--spacing) * 2);
+      padding-inline-start: calc(var(--spacing) * 1.5);
+    }
+
+    & ul > li::marker {
+      color: var(--typography-bullets);
+    }
+
+    & ol > li::marker {
+      color: var(--typography-counters);
+      font-weight: var(--font-weight-normal);
+    }
+
+    & li > ul,
+    & li > ol,
+    & li > p {
+      margin-block: calc(var(--spacing) * 3);
+    }
+
+    & dt {
+      color: var(--typography-headings);
+      font-weight: var(--font-weight-semibold);
+      margin-block-start: calc(var(--spacing) * 5);
+    }
+
+    & dd {
+      margin-block-start: calc(var(--spacing) * 2);
+      padding-inline-start: calc(var(--spacing) * 6.5);
+    }
+
+    /* ---- Blockquote ---- */
+    & blockquote {
+      color: var(--typography-quote);
+      font-style: italic;
+      font-weight: var(--font-weight-medium);
+      border-inline-start: calc(var(--spacing) * 1) solid var(--typography-quote-border);
+      margin-block: calc(var(--spacing) * 6);
+      padding-inline-start: calc(var(--spacing) * 4);
+
+      & p:first-of-type::before {
+        content: open-quote;
+      }
+
+      & p:last-of-type::after {
+        content: close-quote;
+      }
+    }
+
+    /* ---- Code ---- */
+    & code {
+      color: var(--typography-code);
+      background-color: var(--typography-code-bg);
+      font-family: var(--font-mono);
+      font-size: 0.875em;
+      font-weight: var(--font-weight-medium);
+      border-radius: var(--radius-sm);
+      padding: calc(var(--spacing) * 0.5) calc(var(--spacing) * 1);
+    }
+
+    & pre {
+      color: var(--typography-pre-code);
+      background-color: var(--typography-pre-bg);
+      font-family: var(--font-mono);
+      font-size: var(--text-sm);
+      line-height: var(--text-sm--line-height);
+      border-radius: var(--radius-lg);
+      margin-block: calc(var(--spacing) * 6);
+      padding: calc(var(--spacing) * 4);
+      overflow-x: auto;
+
+      /* Undo inline-code chrome inside blocks */
+      & code {
+        color: inherit;
+        background-color: transparent;
+        font-size: inherit;
+        font-weight: inherit;
+        border-radius: 0;
+        padding: 0;
+      }
+    }
+
+    /* ---- Rules ---- */
+    & hr {
+      border: 0;
+      border-block-start: 1px solid var(--typography-rules);
+      margin-block: calc(var(--spacing) * 12);
+    }
+
+    /* ---- Tables ---- */
+    & table {
+      width: 100%;
+      table-layout: auto;
+      border-collapse: collapse;
+      font-size: var(--text-sm);
+      line-height: var(--text-sm--line-height);
+      margin-block: calc(var(--spacing) * 8);
+    }
+
+    & thead th {
+      color: var(--typography-headings);
+      font-weight: var(--font-weight-semibold);
+      text-align: start;
+      border-block-end: 1px solid var(--typography-th-border);
+      padding: calc(var(--spacing) * 2) calc(var(--spacing) * 2);
+
+      &:first-child {
+        padding-inline-start: 0;
+      }
+
+      &:last-child {
+        padding-inline-end: 0;
+      }
+    }
+
+    & tbody td {
+      border-block-end: 1px solid var(--typography-td-border);
+      padding: calc(var(--spacing) * 2) calc(var(--spacing) * 2);
+      vertical-align: baseline;
+
+      &:first-child {
+        padding-inline-start: 0;
+      }
+
+      &:last-child {
+        padding-inline-end: 0;
+      }
+    }
+
+    & tbody tr:last-child td {
+      border-block-end: 0;
+    }
+
+    /* ---- Media ---- */
+    & img,
+    & video {
+      margin-block: calc(var(--spacing) * 8);
+      border-radius: var(--radius-md);
+    }
+
+    & figure {
+      margin-block: calc(var(--spacing) * 8);
+
+      & > img,
+      & > video {
+        margin-block: 0;
+      }
+    }
+
+    & figcaption {
+      color: var(--typography-captions);
+      font-size: var(--text-sm);
+      line-height: var(--text-sm--line-height);
+      margin-block-start: calc(var(--spacing) * 3);
+    }
+
+    /* ---- Edge trimming ---- */
+    & > :first-child {
+      margin-block-start: 0;
+    }
+
+    & > :last-child {
+      margin-block-end: 0;
+    }
+  }
+
+  /* ---- Size variant: compact ---- */
+  .typography-sm {
+    font-size: var(--text-sm);
+    line-height: 1.7142857;
+    max-width: 60ch;
+
+    & h1 {
+      font-size: var(--text-3xl);
+      line-height: var(--text-3xl--line-height);
+    }
+
+    & h2 {
+      font-size: var(--text-xl);
+      line-height: var(--text-xl--line-height);
+    }
+
+    & h3 {
+      font-size: var(--text-lg);
+      line-height: var(--text-lg--line-height);
+    }
+
+    & pre,
+    & table,
+    & figcaption,
+    & small {
+      font-size: var(--text-xs);
+      line-height: var(--text-xs--line-height);
+    }
+  }
+
+  /* ---- Dark variant: flip the light-dark() tokens from colors.css ---- */
+  .typography-invert {
+    color-scheme: dark;
+  }
+}

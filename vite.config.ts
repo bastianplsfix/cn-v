@@ -8,7 +8,7 @@ export default defineConfig({
     dts: true,
   },
   lint: {
-    ignorePatterns: ["docs/**"],
+    ignorePatterns: ["apps/**", "packages/**"],
     options: { typeAware: true, typeCheck: true },
   },
 });
