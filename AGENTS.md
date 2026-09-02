@@ -25,7 +25,7 @@ cn-variants is a tiny, ESM-only TypeScript library with three runtime exports: `
 - `tests/types.ts`: compile-time rejection and inference checks.
 - `examples/basic.ts`: canonical consumer usage, compiled against the packed package by the smoke test.
 - `scripts/package-smoke.mjs`: validates the published tarball, ESM boundary, peer installation, and consumer TypeScript usage.
-- `apps/playground`: Vite+ / TanStack Router docs site and Button gallery (`@cn-variants/playground`). GitHub Pages serves this app at `/cn-variants`.
+- `apps/playground`: Vite+ / TanStack Router docs site and Button gallery (`@cn-variants/playground`). GitHub Pages serves this app at `https://cn-variants.com/` (domain root, Vite `base` `/`).
 - `packages/ui`: private Button example kit (`@cn-variants/ui`) that uses workspace `cn-variants` for tone and size.
 - `DESIGN.md`: rationale behind the deliberately small API.
 - `ROADMAP.md`: planned work and past decisions; consult before proposing API changes.

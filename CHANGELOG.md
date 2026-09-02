@@ -8,6 +8,7 @@
 
 ### Documentation
 
+- GitHub Pages docs now use Vite `base` `/` so assets resolve on `cn-variants.com`
 - Documented empty-string keys in DESIGN.md and the docs runtime contract
 - Corrected `VariantOptions`: keys are variant names for one axis, not class names
 - Clarified tree-shaking: the `createCn` named export shakes when unused; `cn` uses the factory internally; `variants`-only still does not pull clsx or tailwind-merge
