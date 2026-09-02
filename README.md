@@ -167,9 +167,7 @@ interface ButtonProps {
 
 export function Button({ tone = "primary", size = "md", className, children }: ButtonProps) {
   return (
-    <button
-      className={cn("rounded-md font-medium", buttonTone(tone), buttonSize(size), className)}
-    >
+    <button className={cn("rounded-md font-medium", buttonTone(tone), buttonSize(size), className)}>
       {children}
     </button>
   );
