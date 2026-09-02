@@ -115,6 +115,7 @@ const toc = [
   { href: "#variants", label: "variants" },
   { href: "#components", label: "Components" },
   { href: "#button", label: "Button example" },
+  { href: "#badge", label: "Badge example" },
   { href: "#intellisense", label: "IntelliSense" },
   { href: "#runtime", label: "Runtime behavior" },
   { href: "#types", label: "Types" },
@@ -256,6 +257,21 @@ export function DocsContent() {
           call per axis (<code>buttonTone</code>, <code>buttonSize</code>), composes them with{" "}
           <code>cn</code>, and puts <code>className</code> last so callers can override Tailwind
           utilities.
+        </p>
+      </section>
+
+      <section id="badge" className="flex flex-col gap-3">
+        <h2 className="text-[15px] leading-snug text-ink-3">Badge example</h2>
+        <p className="text-[15px] leading-snug text-ink-2">
+          <Link
+            to="/badge"
+            className="text-ink underline decoration-line-subtle underline-offset-2 hover:decoration-ink"
+          >
+            Open the Badge playground
+          </Link>{" "}
+          to see a live <code>@cn-variants/ui</code> Badge. It uses one <code>variants()</code>{" "}
+          lookup (<code>badgeTone</code>), composes it with <code>cn</code>, and puts{" "}
+          <code>className</code> last so callers can override Tailwind utilities.
         </p>
       </section>
 

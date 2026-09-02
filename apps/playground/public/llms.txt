@@ -8,6 +8,7 @@ cn-variants is ESM-only. Its runtime API has three named exports: cn, createCn, 
 
 - [API guide](https://cn-variants.com/): Installation, cn, createCn, variants, exported types, component composition, runtime behavior, design decisions, and Tailwind IntelliSense.
 - [Button playground](https://cn-variants.com/button): Live Button that uses cn-variants for tone and size.
+- [Badge playground](https://cn-variants.com/badge): Live Badge that uses one cn-variants tone lookup.
 - [Full LLM reference](https://cn-variants.com/llms-full.txt): Plain-text API contract and canonical examples.
 
 ## Package and source
