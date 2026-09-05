@@ -5,23 +5,27 @@ on:
     branches: [main]
     paths:
       - "apps/playground/**"
+      - "apps/shadow-demo/**"
       - "packages/ui/**"
       - "src/**"
       - "README.md"
       - "package.json"
       - "package-lock.json"
       - "scripts/ui-smoke.mjs"
+      - "scripts/shadow-smoke.mjs"
       - ".github/workflows/docs.yml"
   pull_request:
     branches: [main]
     paths:
       - "apps/playground/**"
+      - "apps/shadow-demo/**"
       - "packages/ui/**"
       - "src/**"
       - "README.md"
       - "package.json"
       - "package-lock.json"
       - "scripts/ui-smoke.mjs"
+      - "scripts/shadow-smoke.mjs"
       - ".github/workflows/docs.yml"
   workflow_dispatch:
 
@@ -49,6 +53,8 @@ jobs:
       - run: vp exec playwright install --with-deps chromium
 
       - run: vp run test:ui
+
+      - run: vp run demo:shadow:test
 
       - run: vp run docs-check
 

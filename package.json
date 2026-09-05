@@ -54,7 +54,11 @@
     "check:size": "node scripts/check-size.mjs",
     "prepublishOnly": "vp pack",
     "build:ui": "vp run @cn-variants/ui#build",
-    "test:ui": "vp pack && vp run build:ui && node scripts/ui-smoke.mjs"
+    "test:ui": "vp pack && vp run build:ui && node scripts/ui-smoke.mjs",
+    "demo:shadow": "vp pack && vp run build:ui && vp run @cn-variants/shadow-demo#dev",
+    "demo:shadow:build": "vp pack && vp run build:ui && vp run @cn-variants/shadow-demo#check && vp run @cn-variants/shadow-demo#build",
+    "demo:shadow:test": "vp run demo:shadow:build && node scripts/shadow-smoke.mjs",
+    "demo:shadow:stop": "vp run @cn-variants/shadow-demo#dev stop"
   },
   "devDependencies": {
     "@arethetypeswrong/cli": "0.18.5",

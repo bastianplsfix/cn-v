@@ -42,19 +42,17 @@ vp exec playwright install chromium
 vp run test:ui        # packed UI consumer with no Tailwind, checked in Chromium
 ```
 
-To work on the playground locally, start it from the repository root with `vp run docs`. The repo-root `cn-variants` library and `packages/ui` publish independently. `apps/playground` remains private.
+To work on the playground locally, start it from the repository root with `vp run docs`. The repo-root `cn-variants` library is published; the UI kit and demo apps remain private.
 
 The UI package ships compiled CSS through its component entry point. Rebuild it
 with `vp run build:ui` after editing components or styles while the playground is
 running. See [the UI package guide](packages/ui/README.md) for styling and build details.
 
-## UI releases
+## Shadow DOM demo
 
-UI releases use `ui-v<version>` tags and `.github/workflows/publish-ui.yml`. Update
-`packages/ui/package.json`, `packages/ui/CHANGELOG.md`, and the lockfile together.
-The workflow checks the tag, validates a packed consumer against the published
-core dependency, and publishes only `@cn-variants/ui` through npm OIDC.
-See [the UI release guide](packages/ui/README.md#releasing) for initial setup.
+Run `vp run demo:shadow` to compare compiled UI styles in document and shadow
+roots, without a Tailwind plugin. Validate with `vp run demo:shadow:test`.
+See [the demo guide](apps/shadow-demo/README.md) for what the checks prove.
 
 ## Committing
 

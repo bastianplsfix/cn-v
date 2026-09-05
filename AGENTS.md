@@ -26,6 +26,7 @@ cn-variants is a tiny, ESM-only TypeScript library with three runtime exports: `
 - `examples/basic.ts`: canonical consumer usage, compiled against the packed package by the smoke test.
 - `scripts/package-smoke.mjs`: validates the published tarball, ESM boundary, peer installation, and consumer TypeScript usage.
 - `apps/playground`: Vite+ / TanStack Router docs site and Button/Badge gallery (`@cn-variants/playground`). GitHub Pages serves this app at `https://cn-variants.com/` (domain root, Vite `base` `/`).
+- `apps/shadow-demo`: consumer demo without Tailwind; run `vp run demo:shadow` and validate with `vp run demo:shadow:test`.
 - `packages/ui`: Button and Badge UI package (`@cn-variants/ui`) that uses workspace `cn-variants` for tone and size.
 - `DESIGN.md`: rationale behind the deliberately small API.
 - `ROADMAP.md`: planned work and past decisions; consult before proposing API changes.
@@ -55,8 +56,8 @@ For documentation and playground changes, use the root task aliases:
 2. `vp run docs-build`
 
 Start the playground from the repository root with `vp run docs`. Check it
-with `vp run docs-status` and stop it with `vp run docs-stop`. The core library stays at the repo root. `packages/ui` publishes separately through
-`publish-ui.yml` on `ui-v*` tags; `apps/playground` remains private.
+with `vp run docs-status` and stop it with `vp run docs-stop`. The published core library stays at the repo root. `packages/ui`, `apps/playground`,
+and `apps/shadow-demo` are private demo workspaces; do not publish them.
 
 <!--VITE PLUS START-->
 
@@ -141,7 +142,3 @@ These commands map to their corresponding tools. For example, `vp dev --port 300
 1. Update `version` in `package.json` and add an entry to `CHANGELOG.md`.
 2. Commit, tag (`git tag v<version>`), and push with `git push --tags`.
 3. The `publish` GitHub Actions workflow handles npm publishing automatically on `v*` tags via npm trusted publishing (OIDC).
-
-For UI releases, update `packages/ui/package.json` and `packages/ui/CHANGELOG.md`,
-refresh the lockfile, then commit and push a matching `ui-v<version>` tag. See
-`packages/ui/README.md` for the one-time npm trusted publisher setup.

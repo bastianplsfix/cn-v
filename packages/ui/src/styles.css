@@ -10,6 +10,10 @@
 /* Only reset our controls. The host app does not need Tailwind Preflight. */
 @layer base {
   .cnui-control {
+    /* Shadow-local @property rules are not supported in every browser. These
+       defaults keep borders and focus outlines independent of document CSS. */
+    --tw-border-style: solid;
+    --tw-outline-style: solid;
     box-sizing: border-box;
     margin: 0;
     padding: 0;

@@ -1,0 +1,148 @@
+:root {
+  font-family: system-ui, sans-serif;
+  color: #193832;
+  background: #f4f6f2;
+  font-synthesis: none;
+}
+body {
+  margin: 0;
+}
+main {
+  max-width: 1320px;
+  margin: auto;
+  padding: 56px 32px 40px;
+}
+.page-heading {
+  max-width: 700px;
+}
+.eyebrow,
+.case-number {
+  font:
+    11px ui-monospace,
+    monospace;
+  letter-spacing: 0.1em;
+}
+h1 {
+  font-size: clamp(36px, 5vw, 60px);
+  line-height: 1.06;
+  letter-spacing: -0.05em;
+  margin: 20px 0;
+}
+h1 span {
+  color: #467d66;
+}
+.page-heading p {
+  max-width: 560px;
+  color: #586b63;
+  line-height: 1.7;
+}
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 18px 28px;
+  padding: 20px;
+  margin: 32px 0 24px;
+  background: #e8ede5;
+  border: 1px solid #d7e0d4;
+  border-radius: 12px;
+}
+.controls label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  cursor: pointer;
+}
+.controls input {
+  accent-color: #326c54;
+  width: 16px;
+  height: 16px;
+}
+.comparison {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+}
+.demo-case {
+  min-width: 0;
+  overflow: hidden;
+  border: 1px solid #d7e0d4;
+  border-radius: 16px;
+  background: white;
+}
+.demo-case > header {
+  padding: 24px;
+  min-height: 116px;
+  border-bottom: 1px solid #e2e7de;
+}
+h2 {
+  font-size: 18px;
+  letter-spacing: -0.025em;
+  margin: 14px 0 8px;
+}
+.demo-case > header p {
+  font-size: 13px;
+  line-height: 1.6;
+  color: #64736c;
+  margin: 0;
+}
+.shadow-host {
+  all: initial;
+  display: block;
+}
+.interference .demo-case button {
+  background: #ffb4de !important;
+  color: #710044 !important;
+  padding: 14px 20px !important;
+  border: 5px dashed #af287a !important;
+  height: 64px !important;
+  border-radius: 14px !important;
+}
+.explanation {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 32px;
+  margin-top: 40px;
+  padding-top: 24px;
+  border-top: 1px solid #d7e0d4;
+}
+.explanation h2 {
+  margin-top: 0;
+}
+.explanation p {
+  font-size: 14px;
+  color: #64736c;
+  line-height: 1.7;
+}
+pre {
+  overflow: auto;
+  border-radius: 12px;
+  background: #e8ede5;
+  padding: 24px;
+  margin: 0;
+  font-size: 12px;
+  line-height: 1.7;
+}
+.asset-note {
+  font-family: ui-monospace, monospace;
+}
+@media (max-width: 1000px) {
+  .comparison {
+    grid-template-columns: 1fr;
+  }
+  .demo-case > header {
+    min-height: auto;
+  }
+  .explanation {
+    grid-template-columns: 1fr;
+  }
+}
+@media (max-width: 600px) {
+  main {
+    padding: 32px 16px;
+  }
+  .controls {
+    flex-direction: column;
+    align-items: start;
+  }
+}
