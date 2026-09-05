@@ -4,12 +4,18 @@ export type VariantValue = string | readonly string[];
 /** Maps the allowed keys for one variant axis to their classes. */
 export type VariantOptions = Record<string, VariantValue>;
 
+type SnapshotValue<TValue extends VariantValue> = TValue extends string ? TValue : Readonly<TValue>;
+
+type VariantOptionsSnapshot<TOptions extends VariantOptions> = {
+  readonly [Key in keyof TOptions]: SnapshotValue<TOptions[Key]>;
+};
+
 /** A typed class lookup created by {@link variants}. */
 export interface VariantFn<TOptions extends VariantOptions> {
   /** Returns the class string for a variant key, or `""` for `undefined` and unknown runtime keys. */
   (key: keyof TOptions | undefined): string;
   /** Frozen snapshot of the variant map, including copied frozen arrays. */
-  readonly options: Readonly<TOptions>;
+  readonly options: VariantOptionsSnapshot<TOptions>;
 }
 
 /** Extracts the allowed key union from a function returned by {@link variants}. */
