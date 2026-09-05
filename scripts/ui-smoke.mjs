@@ -15,12 +15,13 @@ import { chromium } from "playwright";
 import { build, preview } from "vite-plus";
 
 const projectRoot = process.cwd();
+const publishedCore = process.argv.includes("--published-core");
 const consumer = realpathSync(mkdtempSync(join(tmpdir(), "cn-ui-consumer-")));
 let browser;
 let server;
 
 try {
-  for (const cwd of [projectRoot, join(projectRoot, "packages/ui")]) {
+  for (const cwd of [...(publishedCore ? [] : [projectRoot]), join(projectRoot, "packages/ui")]) {
     execFileSync("vp", ["pm", "pack", "--pack-destination", consumer], { cwd, stdio: "inherit" });
   }
   const tarballs = readdirSync(consumer);
@@ -28,7 +29,7 @@ try {
   const coreTarball = tarballs.find(
     (name) => name.startsWith("cn-variants-") && name !== uiTarball,
   );
-  assert.ok(uiTarball && coreTarball);
+  assert.ok(uiTarball && (publishedCore || coreTarball));
   writeFileSync(
     join(consumer, "package.json"),
     JSON.stringify({
@@ -37,7 +38,7 @@ try {
       packageManager: "npm@11.11.1",
       dependencies: {
         "@cn-variants/ui": `file:./${uiTarball}`,
-        "cn-variants": `file:./${coreTarball}`,
+        ...(publishedCore ? {} : { "cn-variants": `file:./${coreTarball}` }),
         react: "^19.2.0",
         "react-dom": "^19.2.0",
       },

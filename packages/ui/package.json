@@ -1,7 +1,14 @@
 {
   "name": "@cn-variants/ui",
   "version": "0.0.1",
-  "private": true,
+  "description": "React Button and Badge components with automatically imported, compiled Tailwind CSS.",
+  "homepage": "https://cn-variants.com/",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bastianplsfix/cn-variants.git",
+    "directory": "packages/ui"
+  },
   "files": [
     "dist"
   ],
@@ -17,14 +24,18 @@
     },
     "./styles.css": "./dist/styles.css"
   },
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "check": "tsc --noEmit",
-    "build": "vp pack && vp exec tailwindcss -i src/styles.css -o dist/styles.css --minify"
+    "build": "vp pack && vp exec tailwindcss -i src/styles.css -o dist/styles.css --minify",
+    "prepublishOnly": "vp run build"
   },
   "dependencies": {
     "@base-ui/react": "^1.7.0",
     "clsx": "^2.1.1",
-    "cn-variants": "*",
+    "cn-variants": "^3.0.0",
     "tailwind-merge": "^3.5.0"
   },
   "devDependencies": {
