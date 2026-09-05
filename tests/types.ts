@@ -21,9 +21,16 @@ const withArray = variants({ sm: ["px-2", "py-1"] });
 export type ArrayValuesReturnStrings = Expect<Equal<ReturnType<typeof withArray>, string>>;
 export type ArrayValuesInferKeys = Expect<Equal<Variant<typeof withArray>, "sm">>;
 
+const withMutableArray = variants({ sm: ["px-2", "py-1"] as string[] });
+export type SnapshotArrayValuesAreReadonly = Expect<
+  Equal<typeof withMutableArray.options.sm, readonly string[]>
+>;
+
 export function assertInvalidTypesAreRejected() {
   // @ts-expect-error unknown variant keys are rejected
   size("xl");
   // @ts-expect-error options cannot be reassigned
   size.options.sm = "text-base";
+  // @ts-expect-error copied frozen arrays cannot be mutated through options
+  withMutableArray.options.sm.push("text-sm");
 }
