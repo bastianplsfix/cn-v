@@ -3,6 +3,9 @@ import { type ClassValue, clsx } from "clsx";
 /** A Tailwind merge implementation accepted by {@link createCn}. */
 export type MergeClasses = (classes: string) => string;
 
+/** A function that combines class values and resolves Tailwind conflicts. */
+export type Cn = (...inputs: ClassValue[]) => string;
+
 /**
  * Creates a `cn`-style function around a custom Tailwind merge implementation.
  *
@@ -22,6 +25,6 @@ export type MergeClasses = (classes: string) => string;
  * export const cn = createCn(twMerge);
  * ```
  */
-export function createCn(mergeClasses: MergeClasses): (...inputs: ClassValue[]) => string {
+export function createCn(mergeClasses: MergeClasses): Cn {
   return (...inputs: ClassValue[]) => mergeClasses(clsx(inputs));
 }

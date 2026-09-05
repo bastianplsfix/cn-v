@@ -1,6 +1,6 @@
 export { type ClassValue } from "clsx";
 export { cn } from "./cn.ts";
-export { type MergeClasses, createCn } from "./create-cn.ts";
+export { type Cn, type MergeClasses, createCn } from "./create-cn.ts";
 export {
   type Variant,
   type VariantFn,

@@ -37,3 +37,6 @@ jobs:
 
       - name: Check bundle size budget
         run: vp run check:size
+
+      - name: Check tree-shaking
+        run: vp run check:treeshake
