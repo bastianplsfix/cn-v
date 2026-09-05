@@ -3,15 +3,23 @@
   "version": "0.0.1",
   "private": true,
   "files": [
-    "src"
+    "dist"
   ],
   "type": "module",
+  "sideEffects": [
+    "**/*.css"
+  ],
+  "types": "./dist/index.d.mts",
   "exports": {
-    ".": "./src/index.ts",
-    "./styles.css": "./src/styles.css"
+    ".": {
+      "types": "./dist/index.d.mts",
+      "import": "./dist/index.mjs"
+    },
+    "./styles.css": "./dist/styles.css"
   },
   "scripts": {
-    "check": "tsc --noEmit"
+    "check": "tsc --noEmit",
+    "build": "vp pack && vp exec tailwindcss -i src/styles.css -o dist/styles.css --minify"
   },
   "dependencies": {
     "@base-ui/react": "^1.7.0",
@@ -20,10 +28,12 @@
     "tailwind-merge": "^3.5.0"
   },
   "devDependencies": {
+    "@tailwindcss/cli": "^4.3.3",
     "@types/react": "^19.2.18",
     "@types/react-dom": "^19.2.4",
     "react": "^19.2.8",
     "react-dom": "^19.2.8",
+    "tailwindcss": "^4.3.3",
     "typescript": "^5.9.3"
   },
   "peerDependencies": {

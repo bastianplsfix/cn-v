@@ -8,6 +8,9 @@ on:
       - "packages/ui/**"
       - "src/**"
       - "README.md"
+      - "package.json"
+      - "package-lock.json"
+      - "scripts/ui-smoke.mjs"
       - ".github/workflows/docs.yml"
   pull_request:
     branches: [main]
@@ -16,6 +19,9 @@ on:
       - "packages/ui/**"
       - "src/**"
       - "README.md"
+      - "package.json"
+      - "package-lock.json"
+      - "scripts/ui-smoke.mjs"
       - ".github/workflows/docs.yml"
   workflow_dispatch:
 
@@ -39,6 +45,10 @@ jobs:
           cache: true
 
       - run: vp install --frozen-lockfile --ignore-scripts
+
+      - run: vp exec playwright install --with-deps chromium
+
+      - run: vp run test:ui
 
       - run: vp run docs-check
 

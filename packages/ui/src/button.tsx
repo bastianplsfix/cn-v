@@ -1,18 +1,19 @@
+import { cn } from "./cn";
 import { Button as Primitive } from "@base-ui/react/button";
 import type { ButtonProps as PrimitiveProps, ButtonState } from "@base-ui/react/button";
-import { cn, variants, type Variant } from "cn-variants";
+import { variants, type Variant } from "cn-variants";
 import { forwardRef, type ReactNode } from "react";
 
 export const buttonTone = variants({
   secondary:
-    "border-neutral-950 bg-white text-neutral-950 hover:not-data-disabled:bg-neutral-100 active:not-data-disabled:bg-neutral-200 dark:border-white dark:bg-neutral-950 dark:text-white dark:hover:not-data-disabled:bg-neutral-800 dark:active:not-data-disabled:bg-neutral-700",
+    "ui:border-neutral-950 ui:bg-white ui:text-neutral-950 ui:hover:not-data-disabled:bg-neutral-100 ui:active:not-data-disabled:bg-neutral-200 ui:dark:border-white ui:dark:bg-neutral-950 ui:dark:text-white ui:dark:hover:not-data-disabled:bg-neutral-800 ui:dark:active:not-data-disabled:bg-neutral-700",
   primary:
-    "border-neutral-950 bg-neutral-950 text-white hover:not-data-disabled:bg-neutral-700 active:not-data-disabled:bg-neutral-800 dark:border-white dark:bg-white dark:text-neutral-950 dark:hover:not-data-disabled:bg-neutral-200 dark:active:not-data-disabled:bg-neutral-300",
+    "ui:border-neutral-950 ui:bg-neutral-950 ui:text-white ui:hover:not-data-disabled:bg-neutral-700 ui:active:not-data-disabled:bg-neutral-800 ui:dark:border-white ui:dark:bg-white ui:dark:text-neutral-950 ui:dark:hover:not-data-disabled:bg-neutral-200 ui:dark:active:not-data-disabled:bg-neutral-300",
 });
 
 export const buttonSize = variants({
-  sm: "h-7 px-2",
-  md: "h-8 px-3",
+  sm: "ui:h-7 ui:px-2",
+  md: "ui:h-8 ui:px-3",
 });
 
 export type ButtonProps = Omit<PrimitiveProps, "children"> & {
@@ -40,7 +41,7 @@ export const Button = forwardRef<HTMLElement, ButtonProps>(function Button(
 ) {
   const iconAfterLabel = iconPosition === "end";
   const iconSlot = icon ? (
-    <span className="inline-flex size-4 shrink-0 items-center justify-center overflow-hidden [&>svg]:size-full">
+    <span className="ui:inline-flex ui:size-4 ui:shrink-0 ui:items-center ui:justify-center ui:overflow-hidden ui:[&>svg]:size-full">
       {icon}
     </span>
   ) : null;
@@ -51,12 +52,12 @@ export const Button = forwardRef<HTMLElement, ButtonProps>(function Button(
       type={type}
       className={(state: ButtonState) =>
         cn(
-          "inline-flex items-center justify-center gap-2 rounded-none border text-sm leading-none whitespace-nowrap font-normal select-none",
-          "data-disabled:border-neutral-500 data-disabled:text-neutral-500 disabled:border-neutral-500 disabled:text-neutral-500 dark:data-disabled:border-neutral-400 dark:data-disabled:text-neutral-400 dark:disabled:border-neutral-400 dark:disabled:text-neutral-400",
-          "focus-visible:outline-2 focus-visible:-outline-offset-1 focus-visible:outline-neutral-950 dark:focus-visible:outline-white",
+          "cnui-control ui:inline-flex ui:items-center ui:justify-center ui:gap-2 ui:rounded-none ui:border ui:text-sm ui:leading-none ui:whitespace-nowrap ui:font-normal ui:select-none",
+          "ui:data-disabled:border-neutral-500 ui:data-disabled:text-neutral-500 ui:disabled:border-neutral-500 ui:disabled:text-neutral-500 ui:dark:data-disabled:border-neutral-400 ui:dark:data-disabled:text-neutral-400 ui:dark:disabled:border-neutral-400 ui:dark:disabled:text-neutral-400",
+          "ui:focus-visible:outline-2 ui:focus-visible:-outline-offset-1 ui:focus-visible:outline-neutral-950 ui:dark:focus-visible:outline-white",
           buttonTone(tone),
           buttonSize(size),
-          rounded && "rounded-full",
+          rounded && "ui:rounded-full",
           typeof className === "function" ? className(state) : className,
         )
       }

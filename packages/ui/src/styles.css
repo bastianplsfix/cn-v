@@ -1,4 +1,25 @@
-@import "./colors.css";
-@import "./typography.css";
+@layer theme, base, components, utilities;
+@import "tailwindcss/theme.css" layer(theme) prefix(ui);
+@import "tailwindcss/utilities.css" layer(utilities) prefix(ui) source(none);
 
-@source "./**/*.{ts,tsx}";
+@source "./button.tsx";
+@source "./badge.tsx";
+
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
+
+/* Only reset our controls. The host app does not need Tailwind Preflight. */
+@layer base {
+  .cnui-control {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    border: 0 solid;
+    font-family: var(--ui-font-sans);
+    font-feature-settings: normal;
+    font-variation-settings: normal;
+    letter-spacing: normal;
+    text-transform: none;
+    -webkit-appearance: none;
+    appearance: none;
+  }
+}

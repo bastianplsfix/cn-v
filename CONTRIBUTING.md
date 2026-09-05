@@ -38,9 +38,15 @@ For documentation and playground changes:
 ```bash
 vp run docs-check
 vp run docs-build
+vp exec playwright install chromium
+vp run test:ui        # packed UI consumer with no Tailwind, checked in Chromium
 ```
 
 To work on the playground locally, start it from the repository root with `vp run docs`. The published npm package remains the repo-root `cn-variants` library; `apps/playground` and `packages/ui` are private workspace packages.
+
+The UI package ships compiled CSS through its component entry point. Rebuild it
+with `vp run build:ui` after editing components or styles while the playground is
+running. See [the UI package guide](packages/ui/README.md) for styling and build details.
 
 ## Committing
 

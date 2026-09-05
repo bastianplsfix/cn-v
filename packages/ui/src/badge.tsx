@@ -1,13 +1,14 @@
-import { cn, variants, type Variant } from "cn-variants";
+import { cn } from "./cn";
+import { variants, type Variant } from "cn-variants";
 import { forwardRef, type ComponentPropsWithoutRef, type ReactNode } from "react";
 
 export const badgeTone = variants({
   secondary:
-    "border-neutral-950 bg-white text-neutral-950 dark:border-white dark:bg-neutral-950 dark:text-white",
+    "ui:border-neutral-950 ui:bg-white ui:text-neutral-950 ui:dark:border-white ui:dark:bg-neutral-950 ui:dark:text-white",
   primary:
-    "border-neutral-950 bg-neutral-950 text-white dark:border-white dark:bg-white dark:text-neutral-950",
+    "ui:border-neutral-950 ui:bg-neutral-950 ui:text-white ui:dark:border-white ui:dark:bg-white ui:dark:text-neutral-950",
   danger:
-    "border-red-600 bg-red-600 text-white dark:border-red-500 dark:bg-red-500 dark:text-white",
+    "ui:border-red-600 ui:bg-red-600 ui:text-white ui:dark:border-red-500 ui:dark:bg-red-500 ui:dark:text-white",
 });
 
 export type BadgeProps = Omit<ComponentPropsWithoutRef<"span">, "children"> & {
@@ -23,7 +24,7 @@ export const Badge = forwardRef<HTMLSpanElement, BadgeProps>(function Badge(
     <span
       ref={ref}
       className={cn(
-        "inline-flex h-5 items-center justify-center rounded-full border px-2 text-xs leading-none whitespace-nowrap font-normal select-none",
+        "cnui-control ui:inline-flex ui:h-5 ui:items-center ui:justify-center ui:rounded-full ui:border ui:px-2 ui:text-xs ui:leading-none ui:whitespace-nowrap ui:font-normal ui:select-none",
         badgeTone(tone),
         className,
       )}
