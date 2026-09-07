@@ -36,7 +36,7 @@ This is where defaults live in every React component. Moving them into the varia
 
 ## Why variant values can be arrays
 
-Class strings for one variant often grow long (`"px-6 py-3 text-base"`). Accepting `string | readonly string[]` lets authors keep classes as list items, which compose better with JavaScript (spread, filter, conditional entries) than string concatenation. Arrays are joined with spaces at lookup time, so the function still returns a plain string that slots into any merger. The `.options` snapshot copies and freezes those arrays, so later mutation of the source does not change lookup or inspection.
+Class strings for one variant often grow long (`"px-6 py-3 text-base"`). Accepting `string | readonly string[]` lets authors keep classes as list items, which compose better with JavaScript (spread, filter, conditional entries) than string concatenation. Arrays are joined with spaces at lookup time, so the function still returns a plain string that slots into any merger. The `.options` snapshot copies and freezes those arrays, so later mutation of the source does not change lookup or inspection. Its mapped type applies `Readonly` to each value, preserving strings and tuples while exposing mutable input arrays as readonly arrays.
 
 ## Why `undefined` is an accepted key
 
@@ -48,7 +48,7 @@ Optional props (`tone?: ButtonTone`) are the norm, so `buttonTone(tone)` should 
 
 ## Why `createCn` is a separate factory
 
-Projects with custom Tailwind utilities (design tokens like `bg-primary`, plugin classes) need a configured tailwind-merge; the default `cn` must stay zero-config. Rather than making `cn` configurable — which taxes everyone for one edge case — `createCn(mergeClasses)` builds a clsx-wired merge function from any tailwind-merge implementation. The named `createCn` export tree-shakes when unused. `cn` uses that factory internally, so importing `cn` retains the factory code. Importing only `variants` still does not pull clsx or tailwind-merge in a bundler.
+Projects with custom Tailwind utilities (font-size tokens like `text-caption`, plugin classes) need a configured tailwind-merge; the default `cn` must stay zero-config. Rather than making `cn` configurable — which taxes everyone for one edge case — `createCn(mergeClasses)` builds a clsx-wired merge function from any tailwind-merge implementation. The named `createCn` export tree-shakes when unused. `cn` uses that factory internally, so importing `cn` retains the factory code. Importing only `variants` still does not pull clsx or tailwind-merge in a bundler.
 
 ## Why invalid keys return `""` instead of throwing
 

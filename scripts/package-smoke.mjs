@@ -1,5 +1,13 @@
+import { checkConsumerBundles } from "./consumer-bundles.mjs";
 import { execFileSync } from "node:child_process";
-import { mkdtempSync, readFileSync, readdirSync, rmSync, writeFileSync } from "node:fs";
+import {
+  mkdtempSync,
+  readFileSync,
+  readdirSync,
+  realpathSync,
+  rmSync,
+  writeFileSync,
+} from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 
@@ -7,7 +15,7 @@ const projectRoot = process.cwd();
 const rootPackageJson = JSON.parse(readFileSync(join(projectRoot, "package.json"), "utf8"));
 const typescriptVersion = rootPackageJson.devDependencies.typescript.replace(/^[\^~>=< ]+/, "");
 
-const smokeRoot = mkdtempSync(join(tmpdir(), "cn-variants-smoke-"));
+const smokeRoot = realpathSync(mkdtempSync(join(tmpdir(), "cn-variants-smoke-")));
 
 function run(command, args) {
   execFileSync(command, args, { cwd: smokeRoot, stdio: "inherit" });
@@ -81,6 +89,11 @@ size("xl");
 
 // @ts-expect-error options are readonly
 size.options.sm = "text-base";
+
+const mutable = variants({ sm: ["px-2"] as string[] });
+// @ts-expect-error snapshot arrays are readonly even with mutable inputs
+mutable.options.sm.push("py-2");
+
 `,
   );
 
@@ -112,6 +125,7 @@ assert.equal(size(undefined), "");
 `,
   );
   run("node", ["smoke-variants-only.mjs"]);
+  await checkConsumerBundles(smokeRoot);
   run("vp", [
     "exec",
     "tsc",

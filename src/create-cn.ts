@@ -14,12 +14,14 @@ export type MergeClasses = (classes: string) => string;
  * const twMerge = extendTailwindMerge({
  *   extend: {
  *     classGroups: {
- *       "bg-color": [{ bg: ["primary", "secondary"] }],
+ *       "font-size": [{ text: ["caption", "body"] }],
  *     },
  *   },
  * });
  *
  * export const cn = createCn(twMerge);
+ * cn("text-caption", "text-red-500");
+ * // "text-caption text-red-500": the custom font size and color coexist.
  * ```
  */
 export function createCn(mergeClasses: MergeClasses): (...inputs: ClassValue[]) => string {

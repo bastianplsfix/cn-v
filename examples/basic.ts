@@ -1,4 +1,5 @@
-import { cn, type Variant, type VariantsOf, variants } from "cn-variants";
+import { extendTailwindMerge } from "tailwind-merge";
+import { cn, createCn, type Variant, type VariantsOf, variants } from "cn-variants";
 
 const buttonTone = variants({
   primary: "bg-indigo-600 text-white",
@@ -34,3 +35,15 @@ buttonClasses({ tone: "danger", className: "bg-rose-700" });
 
 // @ts-expect-error unknown variant keys are rejected
 buttonClasses({ tone: "warning" });
+
+// Custom font-size tokens can coexist with text colors.
+const customCn = createCn(
+  extendTailwindMerge({
+    extend: { classGroups: { "font-size": [{ text: ["caption", "body"] }] } },
+  }),
+);
+customCn("text-caption", "text-red-500"); // "text-caption text-red-500"
+
+const mutableClasses = ["px-2"];
+const spacing = variants({ sm: mutableClasses });
+export const frozenClasses: readonly string[] = spacing.options.sm;

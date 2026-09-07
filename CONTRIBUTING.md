@@ -29,9 +29,15 @@ vp check            # format + lint + typecheck
 vp test run         # runtime and type tests
 vp pack             # build dist/
 vp run check:package  # publint + arethetypeswrong
-vp run check:size     # gzipped bundle size budget
+vp run check:size     # package and minified consumer budgets, including retained peers
 vp run test:package   # packed-tarball smoke test (ESM, peers, TS consumer)
 ```
+
+The package smoke test also bundles each runtime export through the installed
+tarball's public entry point. It checks retained peer modules and executes the
+result: `variants` retains neither peer, `createCn` retains only `clsx`, and `cn`
+retains both. `check:size` uses the same consumer fixtures against the local build
+and enforces separate gzip budgets.
 
 For documentation and playground changes:
 
@@ -57,6 +63,14 @@ See [the demo guide](apps/shadow-demo/README.md) for what the checks prove.
 ## Committing
 
 Commits should be small and focused. Do not bump the version or edit release tags unless you are cutting a release; releases go through version + CHANGELOG update, a `v<version>` git tag, and push with tags.
+
+## Releasing
+
+1. Update the root package version and refresh the lockfile with `vp install`. The private demos use a local file dependency so they exercise the version being released.
+2. Add a `## <version>` entry to `CHANGELOG.md`, including migration guidance for breaking changes. Run the validation commands above.
+3. Commit the release changes, then tag that commit with `git tag v<version>` and push the commit and that specific tag.
+
+The Publish workflow checks the tag against the package version and requires release notes before running checks, package validation, consumer tests, and size budgets. It publishes the root package through npm trusted publishing and creates a GitHub Release using the changelog entry. The UI package and demo apps remain private.
 
 ## Reporting bugs
 

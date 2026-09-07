@@ -20,14 +20,20 @@ jobs:
 
       - run: vp install --frozen-lockfile --ignore-scripts
 
-      - name: Verify tag matches package version
-        run: test "$GITHUB_REF_NAME" = "v$(node -p 'require("./package.json").version')"
+      - name: Verify release version and notes
+        run: |
+          test "$GITHUB_REF_NAME" = "v$(node -p 'require("./package.json").version')"
+          version="${GITHUB_REF_NAME#v}"
+          awk -v heading="## $version" '$0 == heading {found=1; next} /^## / {found=0} found' CHANGELOG.md > "$RUNNER_TEMP/release-notes.md"
+          grep -q '[^[:space:]]' "$RUNNER_TEMP/release-notes.md"
 
       - run: vp check
 
       - run: vp test run
 
       - run: vp pack
+
+      - run: vp run check:size
 
       - run: vp run check:package
 
@@ -39,6 +45,4 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          version="${GITHUB_REF_NAME#v}"
-          awk -v heading="## $version" '$0 == heading {found=1; next} /^## / {found=0} found' CHANGELOG.md > /tmp/notes.md
-          gh release create "$GITHUB_REF_NAME" --title "$GITHUB_REF_NAME" --notes-file /tmp/notes.md
+          gh release create "$GITHUB_REF_NAME" --verify-tag --title "$GITHUB_REF_NAME" --notes-file "$RUNNER_TEMP/release-notes.md"

@@ -1,10 +1,9 @@
+import { checkConsumerBundles } from "./consumer-bundles.mjs";
 import { gzipSync } from "node:zlib";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 
-// The budget covers the full entry point: the single ESM export bundles
-// cn, createCn, and variants together, even though consumers who import
-// only one of them tree-shake the rest in their own bundlers.
+// Track the package file separately from minified consumer bundles and peers.
 const BUDGET_BYTES = 1536;
 
 const distDir = join(process.cwd(), "dist");
@@ -18,4 +17,12 @@ if (size > BUDGET_BYTES) {
       "If the growth is intentional, update BUDGET_BYTES in scripts/check-size.mjs.",
   );
   process.exit(1);
+}
+
+const consumerBudgets = { variants: 320, createCn: 352, cn: 10240 };
+const sizes = await checkConsumerBundles(process.cwd());
+for (const [name, budget] of Object.entries(consumerBudgets)) {
+  if (sizes[name] > budget) {
+    throw new Error(`${name} consumer exceeds gzip budget: ${sizes[name]} > ${budget} bytes`);
+  }
 }

@@ -14,7 +14,7 @@
     "@cn-variants/ui": "*",
     "@tanstack/react-router": "^1.170.27",
     "clsx": "^2.1.1",
-    "cn-variants": "*",
+    "cn-variants": "file:../..",
     "react": "^19.2.8",
     "react-dom": "^19.2.8",
     "tailwind-merge": "^3.5.0"

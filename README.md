@@ -135,7 +135,7 @@ type ButtonTone = Variant<typeof buttonTone>;
 // → "primary" | "secondary" | "danger"
 ```
 
-The returned function also exposes a frozen `.options` snapshot, so `keyof typeof buttonTone.options` still works if you prefer that style. Creating a variant does not freeze or retain the object passed by the caller. The snapshot includes copied frozen arrays, so later mutation of the source does not change lookup or `.options`.
+The returned function also exposes a frozen `.options` snapshot, so `keyof typeof buttonTone.options` still works if you prefer that style. Creating a variant does not freeze or retain the object passed by the caller. The snapshot includes copied frozen arrays, so later mutation of the source does not change lookup or `.options`. Its TypeScript type also makes those arrays readonly, even when the input contains mutable arrays.
 
 Empty-string keys are allowed and behave like any other key — they are looked up with the same rules, so `variants({ "": "hidden" })("")` returns `"hidden"`.
 
@@ -286,7 +286,7 @@ cn("rounded-md font-medium", buttonTone("primary"));
 
 ## Custom Tailwind configurations
 
-`cn` uses tailwind-merge with its default configuration. If your project uses a custom Tailwind theme — for example shadcn/ui tokens like `bg-primary` or custom spacing scales — you may want conflict resolution that understands those utilities. `createCn` is the built-in escape hatch for this.
+`cn` uses tailwind-merge with its default configuration. If your project uses a custom Tailwind theme — for example a custom font size named `text-caption` — you may want conflict resolution that understands those utilities. `createCn` is the built-in escape hatch for this.
 
 ```ts
 import { createCn } from "cn-variants";
@@ -296,14 +296,14 @@ const cn = createCn(
   extendTailwindMerge({
     extend: {
       classGroups: {
-        "font-size": [{ text: ["primary", "secondary"] }],
+        "font-size": [{ text: ["caption", "body"] }],
       },
     },
   }),
 );
 
-cn("text-primary", "text-secondary");
-// → "text-secondary" (custom tokens are merged correctly)
+cn("text-caption", "text-red-500");
+// → "text-caption text-red-500" (custom font size and color coexist)
 ```
 
 `variants` returns plain strings, so it composes with any merge function unchanged. Wrapping the merger in `createCn` also gives you full clsx input support (`cn("base", { bold: true })`), just like the built-in `cn`.
@@ -326,14 +326,44 @@ const merge: MergeClasses = (classes) => myCustomMerger(classes);
 
 The package declares `"sideEffects": false` so bundlers can apply this optimization safely.
 
+CI bundles each runtime export from the packed package and checks which peer
+dependencies remain. Separate size budgets cover minified consumer bundles,
+including retained peers.
+
 ## Versioning policy
 
-cn-variants follows [semver](https://semver.org/) and declares `clsx` and `tailwind-merge` as peer dependencies, pinned to their current majors: clsx `^2` and tailwind-merge `^3`. You install and version them alongside cn-variants, so your bundler sees exactly one copy.
+cn-variants follows [semver](https://semver.org/) and declares `clsx` and `tailwind-merge` as peer dependencies, with these supported ranges: clsx `^2.1.1` and tailwind-merge `^3.5.0`. You install and version them alongside cn-variants, so your bundler sees exactly one copy.
 
 - **Patch/minor upstream releases** are absorbed automatically. No action needed on your part.
 - **Major upstream releases** may change observable behavior (e.g. how tailwind-merge resolves conflicting utilities). When this happens, cn-variants will release a new major version that bumps the dependency range.
 
 If `cn("px-2", "px-4")` returns a different result because of an upstream update, that's a breaking change from your perspective and will be treated as one.
+
+## Migrating to v4
+
+```bash
+npm install cn-variants@^4
+```
+
+v4 gives array snapshots readonly types that match their frozen runtime behavior. The copying and freezing of string-keyed arrays was introduced in 3.0.1; v4 also handles declared symbol keys. In 3.0.0, source arrays were shared with the lookup. If you changed them later, lookup results changed too. The original definition now stays fixed:
+
+```ts
+import { variants } from "cn-variants";
+
+const classes = ["px-2"];
+const size = variants({ sm: classes });
+classes.push("py-2");
+
+size("sm"); // v3.0.0: "px-2 py-2"; v4: "px-2"
+
+// Create a new lookup when definitions change.
+const updatedSize = variants({ sm: [...size.options.sm, "py-2"] });
+updatedSize("sm"); // "px-2 py-2"
+```
+
+`.options` arrays and tuples are readonly in TypeScript, including when the input is mutable. Calls such as `size.options.sm.push("py-2")` are type errors and throw at runtime if types are bypassed. The caller's own arrays remain mutable.
+
+Existing string maps and immutable array usage need no changes. The runtime exports, ESM-only entry point, and peer dependency ranges remain unchanged: clsx `^2.1.1` and tailwind-merge `^3.5.0`.
 
 ## Migrating to v3
 
@@ -343,7 +373,7 @@ v3 declares `clsx` and `tailwind-merge` as peer dependencies. npm 7+ and other m
 npm install clsx tailwind-merge
 ```
 
-Your versions must satisfy clsx `^2` and tailwind-merge `^3`. Nothing else changed for existing code. See the [CHANGELOG](./CHANGELOG.md) for details.
+For v4, your versions must satisfy clsx `^2.1.1` and tailwind-merge `^3.5.0`. When upgrading from v2, lookup functions also accept `undefined`, and unknown keys are rejected by TypeScript. See the [CHANGELOG](./CHANGELOG.md) for details.
 
 ## License
 

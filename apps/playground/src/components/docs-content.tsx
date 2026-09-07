@@ -70,14 +70,14 @@ const cn = createCn(
   extendTailwindMerge({
     extend: {
       classGroups: {
-        "font-size": [{ text: ["primary", "secondary"] }],
+        "font-size": [{ text: ["caption", "body"] }],
       },
     },
   }),
 );
 
-cn("text-primary", "text-secondary");
-// → "text-secondary"`,
+cn("text-caption", "text-red-500");
+// → "text-caption text-red-500"`,
   component: `interface ButtonProps {
   tone?: Variant<typeof buttonTone>;
   size?: Variant<typeof buttonSize>;
@@ -353,6 +353,22 @@ export function DocsContent() {
           </tbody>
         </table>
         <CodePanel code={samples.wrapper} label="card.ts" />
+      </section>
+
+      <section id="migrating-to-v4" className="flex flex-col gap-3">
+        <h2 className="text-[15px] leading-snug text-ink-3">Migrating to v4</h2>
+        <p className="text-[15px] leading-snug text-ink-2">
+          Array values are copied and frozen when you call <code>variants()</code> (since 3.0.1).
+          Changing a source array later no longer changes the lookup. Arrays and tuples in{" "}
+          <code>.options</code> now have matching readonly types in v4. Create a new lookup when
+          class definitions change. Existing string maps and immutable array usage need no changes.
+        </p>
+        <a
+          href="https://github.com/bastianplsfix/cn-variants/blob/main/README.md#migrating-to-v4"
+          className="text-[15px] text-ink underline underline-offset-4"
+        >
+          Read the migration guide
+        </a>
       </section>
 
       <section id="design" className="flex flex-col gap-3">

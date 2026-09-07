@@ -1,5 +1,35 @@
 # Changelog
 
+## 4.0.0
+
+### Breaking changes
+
+- Array snapshots introduced in 3.0.1 now have matching readonly types. Compared with 3.0.0, mutating a source array after creating a lookup no longer changes its output or `.options`.
+- `.options` exposes readonly array and tuple types even for mutable inputs. TypeScript rejects mutations; bypassing the types and mutating a frozen array throws at runtime.
+
+### Migration
+
+Create a new lookup when class definitions change instead of mutating a source array or `.options`. Existing string maps and immutable array usage need no changes. See [Migrating to v4](./README.md#migrating-to-v4) for an example.
+
+The three runtime exports, ESM-only entry point, and peer dependency ranges (`clsx` `^2.1.1`, `tailwind-merge` `^3.5.0`) remain unchanged.
+
+### Fixed
+
+- Copy and freeze arrays under declared symbol keys as well as string keys.
+
+### Validation
+
+- Bundle and execute each runtime export from the packed package, checking retained peer dependencies after tree-shaking.
+- Enforce gzip budgets for minified consumer bundles, including retained peers, in CI and before publishing.
+- Cover empty maps, array snapshots, readonly tuples, and union inference in runtime and type tests.
+- Validate release notes before publishing.
+
+### Documentation
+
+- Document frozen snapshots, empty-string keys, the three runtime exports, and tree-shaking behavior.
+- Use a custom font-size group in the `createCn` example and test to demonstrate behavior that differs from the default merger.
+- Correct variant type descriptions and comparisons with CVA and tailwind-variants.
+
 ## 3.0.1
 
 ### Fixed

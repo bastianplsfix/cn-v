@@ -8,8 +8,8 @@ export type VariantOptions = Record<string, VariantValue>;
 export interface VariantFn<TOptions extends VariantOptions> {
   /** Returns the class string for a variant key, or `""` for `undefined` and unknown runtime keys. */
   (key: keyof TOptions | undefined): string;
-  /** Frozen snapshot of the variant map, including copied frozen arrays. */
-  readonly options: Readonly<TOptions>;
+  /** Frozen snapshot; array values are readonly even when the input arrays are mutable. */
+  readonly options: { readonly [Key in keyof TOptions]: Readonly<TOptions[Key]> };
 }
 
 /** Extracts the allowed key union from a function returned by {@link variants}. */
@@ -57,7 +57,7 @@ export function variants<const TOptions extends VariantOptions>(
   map: TOptions,
 ): VariantFn<TOptions> {
   const options = Object.assign(Object.create(null), map);
-  for (const key of Object.keys(options)) {
+  for (const key of Reflect.ownKeys(options)) {
     const value = options[key];
     if (Array.isArray(value)) {
       options[key] = Object.freeze(value.slice());

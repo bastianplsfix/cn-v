@@ -72,12 +72,15 @@ test("createCn works with a real extendTailwindMerge merger", async () => {
   const twMerge = extendTailwindMerge({
     extend: {
       classGroups: {
-        "bg-color": [{ bg: ["primary", "secondary"] }],
+        "font-size": [{ text: ["caption", "body"] }],
       },
     },
   });
   const customCn = createCn(twMerge);
-  expect(customCn("bg-primary px-2", "px-4 bg-secondary")).toBe("px-4 bg-secondary");
+  // The default merger interprets text-caption as a color, not a font size.
+  expect(cn("text-caption", "text-red-500")).toBe("text-red-500");
+  expect(customCn("text-caption", "text-red-500")).toBe("text-caption text-red-500");
+  expect(customCn("text-caption text-red-500", "text-body")).toBe("text-red-500 text-body");
 });
 
 // variants
@@ -166,6 +169,37 @@ test("options snapshot copies and freezes array values", () => {
 test("variants supports empty-string keys", () => {
   const hidden = variants({ "": "hidden" });
   expect(hidden("")).toBe("hidden");
+});
+
+test("empty variant maps return empty strings", () => {
+  const empty = variants({});
+  expect(empty(undefined)).toBe("");
+  // @ts-expect-error testing an unknown runtime key on an empty map
+  expect(empty("sm")).toBe("");
+  expect(Object.keys(empty.options)).toEqual([]);
+  expect(Object.isFrozen(empty.options)).toBe(true);
+});
+
+test("empty array values return empty strings without freezing the source", () => {
+  const source = { none: [] as string[] };
+  const lookup = variants(source);
+  expect(lookup("none")).toBe("");
+  expect(Object.isFrozen(source.none)).toBe(false);
+  expect(Object.isFrozen(lookup.options.none)).toBe(true);
+});
+
+test("declared symbol keys also receive independent frozen array snapshots", () => {
+  const key = Symbol("tone");
+  const source = { [key]: ["text-sm"] };
+  const tone = variants(source);
+  expectTypeOf<Variant<typeof tone>>().toEqualTypeOf<typeof key>();
+  source[key].push("font-bold");
+  expect(tone(key)).toBe("text-sm");
+  expect(Object.isFrozen(tone.options[key])).toBe(true);
+  expect(() => {
+    // @ts-expect-error the snapshot array is readonly, and also frozen at runtime
+    tone.options[key].push("italic");
+  }).toThrow(TypeError);
 });
 
 // integration
